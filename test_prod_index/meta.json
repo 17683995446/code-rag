@@ -1,0 +1,26 @@
+[
+  {
+    "chunk_id": "sample.py:1-49",
+    "content": "\"\"\"Sample Python module for testing the code RAG system.\"\"\"\n\nimport os\nfrom typing import List, Dict, Optional\n\n\nclass DataProcessor:\n    \"\"\"A class for processing data.\"\"\"\n\n    def __init__(self, name: str):\n        self.name = name\n        self.data: List[int] = []\n\n    def add(self, value: int) -> None:\n        \"\"\"Add a value to the data list.\"\"\"\n        self.data.append(value)\n\n    def get_sum(self) -> int:\n        \"\"\"Calculate the sum of all values.\"\"\"\n        total = 0\n        for item in self.data:\n            total += item\n        return total\n\n    def clear(self) -> None:\n        \"\"\"Clear all data.\"\"\"\n        self.data.clear()\n\n\ndef calculate_average(numbers: List[float]) -> Optional[float]:\n    \"\"\"Calculate the average of a list of numbers.\"\"\"\n    if not numbers:\n        return None\n    return sum(numbers) / len(numbers)\n\n\nasync def fetch_data(url: str) -> Dict:\n    \"\"\"Fetch data from a URL asynchronously.\"\"\"\n    return {\"url\": url, \"status\": \"ok\"}\n\n\ndef process_files(file_paths: List[str]) -> List[str]:\n    \"\"\"Process multiple files and return their names.\"\"\"\n    results = []\n    for path in file_paths:\n        if os.path.exists(path):\n            results.append(os.path.basename(path))\n    return results",
+    "file_path": "sample.py",
+    "language": "python",
+    "start_line": 1,
+    "end_line": 49,
+    "chunk_type": "block",
+    "symbols": [],
+    "docstring": "",
+    "imports": []
+  },
+  {
+    "chunk_id": "utils.js:1-29",
+    "content": "export class Calculator {\n    constructor() {\n        this.result = 0;\n    }\n\n    add(x) {\n        this.result += x;\n        return this;\n    }\n\n    subtract(x) {\n        this.result -= x;\n        return this;\n    }\n\n    getResult() {\n        return this.result;\n    }\n\n    clear() {\n        this.result = 0;\n        return this;\n    }\n}\n\nexport function parseJSON(str) {\n    return JSON.parse(str);\n}",
+    "file_path": "utils.js",
+    "language": "javascript",
+    "start_line": 1,
+    "end_line": 29,
+    "chunk_type": "block",
+    "symbols": [],
+    "docstring": "",
+    "imports": []
+  }
+]

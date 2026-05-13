@@ -1,0 +1,16 @@
+index:
+  embedding_model: "all-MiniLM-L6-v2"
+  embedding_dim: 384
+  chunk_size: 512
+  chunk_overlap: 50
+  index_type: "FlatIP"
+
+storage:
+  index_path: "./data/index.faiss"
+  metadata_path: "./data/metadata.json"
+  bm25_path: "./data/bm25.pkl"
+
+search:
+  top_k: 10
+  rerank_top_k: 5
+  hybrid_alpha: 0.7

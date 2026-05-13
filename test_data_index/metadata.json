@@ -1,0 +1,154 @@
+[
+  {
+    "chunk_id": "sample.py:7-49:0",
+    "content": "class DataProcessor:\n    \"\"\"A class for processing data.\"\"\"\n\n    def __init__(self, name: str):\n        self.name = name\n        self.data: List[int] = []\n\n    def add(self, value: int) -> None:\n        \"\"\"Add a value to the data list.\"\"\"\n        self.data.append(value)\n\n    def get_sum(self) -> int:\n        \"\"\"Calculate the sum of all values.\"\"\"\n        total = 0\n        for item in self.data:\n            total += item\n        return total\n\n    def clear(self) -> None:\n        \"\"\"Clear all data.\"\"\"\n        self.data.clear()\n\n\n    def __init__(self, name: str):\n        self.name = name\n        self.data: List[int] = []\n\n    def add(self, value: int) -> None:\n        \"\"\"Add a value to the data list.\"\"\"\n        self.data.append(value)\n\n    def get_sum(self) -> int:\n        \"\"\"Calculate the sum of all values.\"\"\"\n        total = 0\n        for item in self.data:\n            total += item\n        return total\n\n    def clear(self) -> None:\n        \"\"\"Clear all data.\"\"\"\n        self.data.clear()\n\n\ndef calculate_average(numbers: List[float]) -> Optional[float]:\n    \"\"\"Calculate the average of a list of numbers.\"\"\"\n    if not numbers:\n        return None\n    return sum(numbers) / len(numbers)\n\n\ndef process_files(file_paths: List[str]) -> List[str]:\n    \"\"\"Process multiple files and return their names.\"\"\"\n    results = []\n    for path in file_paths:\n        if os.path.exists(path):\n            results.append(os.path.basename(path))\n    return results\n",
+    "file_path": "sample.py",
+    "language": "python",
+    "start_line": 7,
+    "end_line": 49,
+    "chunk_type": "class",
+    "docstring": "A class for processing data.",
+    "imports": [],
+    "references": [],
+    "metadata": {
+      "symbol_name": "DataProcessor",
+      "visibility": "public",
+      "signature": "class DataProcessor:"
+    },
+    "symbols": [
+      {
+        "name": "DataProcessor",
+        "type": "class",
+        "start": 7,
+        "end": 29,
+        "visibility": "public",
+        "signature": "class DataProcessor:"
+      },
+      {
+        "name": "__init__",
+        "type": "method",
+        "start": 10,
+        "end": 13,
+        "visibility": "public",
+        "signature": "def __init__(self, name: str):"
+      },
+      {
+        "name": "add",
+        "type": "method",
+        "start": 14,
+        "end": 17,
+        "visibility": "public",
+        "signature": "def add(self, value: int) -> None:"
+      },
+      {
+        "name": "get_sum",
+        "type": "method",
+        "start": 18,
+        "end": 24,
+        "visibility": "public",
+        "signature": "def get_sum(self) -> int:"
+      },
+      {
+        "name": "clear",
+        "type": "method",
+        "start": 25,
+        "end": 29,
+        "visibility": "public",
+        "signature": "def clear(self) -> None:"
+      },
+      {
+        "name": "calculate_average",
+        "type": "function",
+        "start": 30,
+        "end": 36,
+        "visibility": "public",
+        "signature": "def calculate_average(numbers: List[float]) -> Optional[float]:"
+      },
+      {
+        "name": "process_files",
+        "type": "function",
+        "start": 42,
+        "end": 49,
+        "visibility": "public",
+        "signature": "def process_files(file_paths: List[str]) -> List[str]:"
+      }
+    ]
+  },
+  {
+    "chunk_id": "utils.js:1-28:0",
+    "content": "export class Calculator {\n    constructor() {\n        this.result = 0;\n    }\n\n    add(x) {\n        this.result += x;\n        return this;\n    }\n\n    subtract(x) {\n        this.result -= x;\n        return this;\n    }\n\n    getResult() {\n        return this.result;\n    }\n\n    clear() {\n        this.result = 0;\n        return this;\n    }\n}\n    constructor() {\n        this.result = 0;\n    }\n    add(x) {\n        this.result += x;\n        return this;\n    }\n    subtract(x) {\n        this.result -= x;\n        return this;\n    }\n    getResult() {\n        return this.result;\n    }\n    clear() {\n        this.result = 0;\n        return this;\n    }\nexport function parseJSON(str) {\n    return JSON.parse(str);\n}",
+    "file_path": "utils.js",
+    "language": "javascript",
+    "start_line": 1,
+    "end_line": 28,
+    "chunk_type": "class",
+    "docstring": "",
+    "imports": [
+      "export class Calculator {"
+    ],
+    "references": [],
+    "metadata": {
+      "symbol_name": "Calculator",
+      "visibility": "public",
+      "signature": "class Calculator {\n    constructor()"
+    },
+    "symbols": [
+      {
+        "name": "Calculator",
+        "type": "class",
+        "start": 1,
+        "end": 24,
+        "visibility": "public",
+        "signature": "class Calculator {\n    constructor()"
+      },
+      {
+        "name": "constructor",
+        "type": "method",
+        "start": 2,
+        "end": 4,
+        "visibility": "public",
+        "signature": "constructor()"
+      },
+      {
+        "name": "add",
+        "type": "method",
+        "start": 6,
+        "end": 9,
+        "visibility": "public",
+        "signature": "add(x)"
+      },
+      {
+        "name": "subtract",
+        "type": "method",
+        "start": 11,
+        "end": 14,
+        "visibility": "public",
+        "signature": "subtract(x)"
+      },
+      {
+        "name": "getResult",
+        "type": "method",
+        "start": 16,
+        "end": 18,
+        "visibility": "public",
+        "signature": "getResult()"
+      },
+      {
+        "name": "clear",
+        "type": "method",
+        "start": 20,
+        "end": 23,
+        "visibility": "public",
+        "signature": "clear()"
+      },
+      {
+        "name": "parseJSON",
+        "type": "function",
+        "start": 26,
+        "end": 28,
+        "visibility": "public",
+        "signature": "function parseJSON(str)"
+      }
+    ]
+  }
+]

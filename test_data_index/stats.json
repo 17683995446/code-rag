@@ -1,0 +1,11 @@
+{
+  "total_files": 2,
+  "processed_files": 2,
+  "failed_files": 0,
+  "total_chunks": 2,
+  "total_symbols": 14,
+  "total_lines": 78,
+  "index_size_mb": 0.017612457275390625,
+  "build_time_seconds": 0.012901067733764648,
+  "errors": []
+}
