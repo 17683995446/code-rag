@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code RAG v16.0 - 智能代码检索系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 2px solid #3b82f6;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+        }
+
+        .logo-text h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            background: #10b981;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge.offline {
+            background: #ef4444;
+        }
+
+        /* Main Content */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-section h3 {
+            color: #94a3b8;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .nav-item.active {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #334155;
+        }
+
+        /* Search Section */
+        .search-section {
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 60px 18px 20px;
+            font-size: 16px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid #334155;
+            border-radius: 12px;
+            color: #e2e8f0;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .search-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #3b82f6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        /* Results */
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .result-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .result-card:hover {
+            border-color: #3b82f6;
+            transform: translateX(5px);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .result-score {
+            background: rgba(59, 130, 246, 0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #3b82f6;
+        }
+
+        .result-file {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .result-preview {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Index Section */
+        .index-section {
+            display: none;
+        }
+
+        .index-section.active {
+            display: block;
+        }
+
+        .index-form {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            padding: 10px 25px;
+            border-radius: 8px;
+            color: #3b82f6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        /* NL2Code Section */
+        .nl2code-section {
+            display: none;
+        }
+
+        .nl2code-section.active {
+            display: block;
+        }
+
+        /* Analyze Section */
+        .analyze-section {
+            display: none;
+        }
+
+        .analyze-section.active {
+            display: block;
+        }
+
+        .code-editor {
+            width: 100%;
+            height: 300px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+            color: #e2e8f0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            resize: vertical;
+            outline: none;
+        }
+
+        .analysis-result {
+            margin-top: 25px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #334155;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Tabs */
+        .tab-container {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #334155;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            background: rgba(15, 23, 42, 0.8);
+            border: none;
+            border-radius: 8px 8px 0 0;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .tab.active {
+            background: rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+
+        /* Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .tag {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid #8b5cf6;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #8b5cf6;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🧠</div>
+                <div class="logo-text">
+                    <h1>Code RAG v16.0</h1>
+                    <p>智能代码检索系统</p>
+                </div>
+            </div>
+            <div class="status-badge" id="statusBadge">
+                <span>📡</span>
+                <span>在线</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-grid">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3>导航</h3>
+                    <div class="nav-item active" onclick="switchTab('search')">
+                        <span>🔍</span>
+                        <span>代码搜索</span>
+                    </div>
+                    <div class="nav-item" onclick="switchTab('index')">
+                        <span>📚</span>
+                        <span>索引管理</span>
+                    </div>
+                    <div class="nav-item" onclick="switchTab('nl2code')">
+                        <span>💬</span>
+                        <span>自然语言</span>
+                    </div>
+                    <div class="nav-item" onclick="switchTab('analyze')">
+                        <span>📊</span>
+                        <span>代码分析</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>系统状态</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="filesIndexed">0</div>
+                            <div class="stat-label">文件索引</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="chunksIndexed">0</div>
+                            <div class="stat-label">代码块</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Search Section -->
+                <div class="search-section active" id="searchSection">
+                    <div class="tab-container">
+                        <button class="tab active" onclick="switchTab('search')">搜索</button>
+                        <button class="tab" onclick="switchTab('nl2code')">自然语言</button>
+                        <button class="tab" onclick="switchTab('analyze')">分析</button>
+                    </div>
+
+                    <h2 style="margin-bottom: 20px;">🔍 智能代码搜索</h2>
+                    
+                    <div class="search-box">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput" 
+                            placeholder="输入要搜索的代码内容..."
+                            onkeypress="if(event.key === 'Enter') searchCode()"
+                        >
+                        <button class="search-btn" onclick="searchCode()">
+                            搜索
+                        </button>
+                    </div>
+
+                    <div class="search-options">
+                        <button class="option-btn" onclick="searchExample('authentication')">🔐 用户认证</button>
+                        <button class="option-btn" onclick="searchExample('database')">💾 数据库</button>
+                        <button class="option-btn" onclick="searchExample('API')">🌐 API</button>
+                        <button class="option-btn" onclick="searchExample('error')">⚠️ 错误处理</button>
+                    </div>
+
+                    <div class="loading" id="searchLoading">
+                        <div class="spinner"></div>
+                        <p>正在搜索...</p>
+                    </div>
+
+                    <div class="results-section" id="resultsSection">
+                        <div class="results-header">
+                            <h3>搜索结果</h3>
+                            <span id="resultsCount">0 个结果</span>
+                        </div>
+                        <div id="resultsContainer">
+                            <p style="color: #94a3b8; text-align: center; padding: 40px;">
+                                输入搜索词开始查找代码
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Index Section -->
+                <div class="index-section" id="indexSection">
+                    <h2>📚 索引管理</h2>
+                    
+                    <div class="index-form">
+                        <div class="form-group">
+                            <label class="form-label">项目目录</label>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="indexDirectory" 
+                                placeholder="/path/to/your/code"
+                            >
+                        </div>
+                        <button class="btn-primary" onclick="indexDirectory()">
+                            🚀 开始索引
+                        </button>
+                    </div>
+
+                    <div class="loading" id="indexLoading">
+                        <div class="spinner"></div>
+                        <p>正在索引代码...</p>
+                    </div>
+
+                    <div id="indexResult"></div>
+                </div>
+
+                <!-- NL2Code Section -->
+                <div class="nl2code-section" id="nl2codeSection">
+                    <h2>💬 自然语言转代码搜索</h2>
+                    
+                    <div class="index-form">
+                        <div class="form-group">
+                            <label class="form-label">用自然语言描述你要找的代码</label>
+                            <textarea 
+                                class="code-editor" 
+                                id="nl2codeInput" 
+                                placeholder="例如：创建用户登录功能，验证密码..."
+                            ></textarea>
+                        </div>
+                        <button class="btn-primary" onclick="nl2codeConvert()">
+                            🔄 转换为搜索
+                        </button>
+                    </div>
+
+                    <div class="loading" id="nl2codeLoading">
+                        <div class="spinner"></div>
+                        <p>正在分析...</p>
+                    </div>
+
+                    <div id="nl2codeResult"></div>
+                </div>
+
+                <!-- Analyze Section -->
+                <div class="analyze-section" id="analyzeSection">
+                    <h2>📊 代码智能分析</h2>
+                    
+                    <div class="index-form">
+                        <div class="form-group">
+                            <label class="form-label">粘贴代码进行分析</label>
+                            <textarea 
+                                class="code-editor" 
+                                id="analyzeInput" 
+                                placeholder="粘贴你的代码..."
+                            ></textarea>
+                        </div>
+                        <button class="btn-primary" onclick="analyzeCode()">
+                            📊 分析代码
+                        </button>
+                    </div>
+
+                    <div class="loading" id="analyzeLoading">
+                        <div class="spinner"></div>
+                        <p>正在分析...</p>
+                    </div>
+
+                    <div id="analyzeResult"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isIndexed = false;
+
+        // Tab switching
+        function switchTab(tabName) {
+            const sections = ['search', 'index', 'nl2code', 'analyze'];
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            sections.forEach(section => {
+                const sectionEl = document.getElementById(section + 'Section');
+                if (sectionEl) {
+                    sectionEl.classList.remove('active');
+                }
+            });
+
+            navItems.forEach((item, index) => {
+                item.classList.remove('active');
+                if (sections[index] === tabName) {
+                    item.classList.add('active');
+                }
+            });
+
+            if (tabName === 'search') {
+                document.getElementById('searchSection').classList.add('active');
+            } else if (tabName === 'index') {
+                document.getElementById('indexSection').classList.add('active');
+            } else if (tabName === 'nl2code') {
+                document.getElementById('nl2codeSection').classList.add('active');
+            } else if (tabName === 'analyze') {
+                document.getElementById('analyzeSection').classList.add('active');
+            }
+        }
+
+        // Search code
+        async function searchCode() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) return;
+
+            showLoading('search');
+
+            try {
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        top_k: 10
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data.results);
+                    document.getElementById('resultsCount').textContent = 
+                        `${data.total_results} 个结果 (${data.elapsed_ms.toFixed(1)}ms)`;
+                } else {
+                    alert('搜索失败: ' + (data.error || '未知错误'));
+                }
+            } catch (error) {
+                console.error(error);
+                alert('搜索出错: ' + error.message);
+            } finally {
+                hideLoading('search');
+            }
+        }
+
+        // Display results
+        function displayResults(results) {
+            const container = document.getElementById('resultsContainer');
+            
+            if (!results || results.length === 0) {
+                container.innerHTML = `
+                    <p style="color: #94a3b8; text-align: center; padding: 40px;">
+                        没有找到相关代码
+                    </p>
+                `;
+                return;
+            }
+
+            container.innerHTML = results.map((result, index) => `
+                <div class="result-card">
+                    <div class="result-header">
+                        <span class="result-file">${result.file || '未知文件'}</span>
+                        <span class="result-score">${(result.score * 100).toFixed(1)}% 匹配</span>
+                    </div>
+                    <div class="result-preview">${escapeHtml(result.preview)}</div>
+                    <div class="result-meta">
+                        <span>📝 ${result.type || '代码'}</span>
+                        <span>📍 行 ${result.line_start} - ${result.line_end}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Index directory
+        async function indexDirectory() {
+            const directory = document.getElementById('indexDirectory').value;
+            if (!directory) return;
+
+            showLoading('index');
+
+            try {
+                const response = await fetch('/api/index', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        directory: directory
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    isIndexed = true;
+                    document.getElementById('filesIndexed').textContent = data.files_processed;
+                    document.getElementById('chunksIndexed').textContent = data.chunks_indexed;
+                    
+                    document.getElementById('indexResult').innerHTML = `
+                        <div class="analysis-result">
+                            <h3>✅ 索引完成!</h3>
+                            <p>📁 处理文件: ${data.files_processed}</p>
+                            <p>📝 索引代码块: ${data.chunks_indexed}</p>
+                            <p>⏱️ 耗时: ${data.elapsed_seconds.toFixed(2)}秒</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error(error);
+                alert('索引出错: ' + error.message);
+            } finally {
+                hideLoading('index');
+            }
+        }
+
+        // NL2Code
+        async function nl2codeConvert() {
+            const query = document.getElementById('nl2codeInput').value;
+            if (!query) return;
+
+            showLoading('nl2code');
+
+            try {
+                const response = await fetch('/api/nl2code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: query
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    let html = `
+                        <div class="analysis-result">
+                            <h3>🎯 分析结果</h3>
+                            <p><strong>识别意图:</strong> ${data.intent}</p>
+                            <p><strong>置信度:</strong> ${(data.confidence * 100).toFixed(1)}%</p>
+                            <h4>🔍 建议搜索词:</h4>
+                    `;
+                    
+                    if (data.search_queries.length > 0) {
+                        html += '<div class="tags-container">';
+                        data.search_queries.forEach(query => {
+                            html += `<span class="tag">${query}</span>`;
+                        });
+                        html += '</div>';
+                        
+                        html += `
+                            <p style="margin-top: 20px;">
+                                <button class="btn-secondary" onclick="useSearchQuery('${data.search_queries[0]}')">
+                                    使用第一个搜索词
+                                </button>
+                            </p>
+                        `;
+                    }
+                    
+                    html += '</div>';
+                    document.getElementById('nl2codeResult').innerHTML = html;
+                }
+            } catch (error) {
+                console.error(error);
+                alert('转换出错: ' + error.message);
+            } finally {
+                hideLoading('nl2code');
+            }
+        }
+
+        // Analyze code
+        async function analyzeCode() {
+            const code = document.getElementById('analyzeInput').value;
+            if (!code) return;
+
+            showLoading('analyze');
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        code: code
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    let html = `
+                        <div class="analysis-result">
+                            <h3>📊 代码分析结果</h3>
+                            <p><strong>检测语言:</strong> ${data.detected_language}</p>
+                            <p><strong>主要意图:</strong> ${data.intent.primary || '未知'}</p>
+                            <p><strong>置信度:</strong> ${(data.intent.confidence * 100).toFixed(1)}%</p>
+                            <h4>🏷️ 标签:</h4>
+                    `;
+                    
+                    if (data.tags.length > 0) {
+                        html += '<div class="tags-container">';
+                        data.tags.forEach(tag => {
+                            html += `<span class="tag">${tag.name} (${tag.category})</span>`;
+                        });
+                        html += '</div>';
+                    }
+                    
+                    html += '</div>';
+                    document.getElementById('analyzeResult').innerHTML = html;
+                }
+            } catch (error) {
+                console.error(error);
+                alert('分析出错: ' + error.message);
+            } finally {
+                hideLoading('analyze');
+            }
+        }
+
+        function searchExample(query) {
+            document.getElementById('searchInput').value = query;
+            searchCode();
+        }
+
+        function useSearchQuery(query) {
+            document.getElementById('searchInput').value = query;
+            switchTab('search');
+            searchCode();
+        }
+
+        function showLoading(type) {
+            document.getElementById(type + 'Loading').classList.add('active');
+        }
+
+        function hideLoading(type) {
+            document.getElementById(type + 'Loading').classList.remove('active');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Check system health on load
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/health')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('System health:', data);
+                })
+                .catch(error => {
+                    console.error('Health check failed:', error);
+                    document.getElementById('statusBadge').classList.add('offline');
+                });
+        });
+    </script>
+</body>
+</html>

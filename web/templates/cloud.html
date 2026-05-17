@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云服务配置生成 - Code RAG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <nav class="glass sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                    <i class="fas fa-cloud text-white text-xl"></i>
+                </div>
+                <span class="text-xl font-bold">Code RAG <span class="text-purple-400">v24.0</span></span>
+            </a>
+            <div class="flex gap-6">
+                <a href="/" class="hover:text-purple-400 transition">首页</a>
+                <a href="/kubernetes" class="hover:text-purple-400 transition">Kubernetes</a>
+                <a href="/docker" class="hover:text-purple-400 transition">Docker</a>
+                <a href="/cloud" class="text-purple-400 font-semibold">云服务</a>
+                <a href="/cicd" class="hover:text-purple-400 transition">CI/CD</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold mb-2">
+            <i class="fas fa-cloud mr-3 text-orange-400"></i>云服务配置生成
+        </h1>
+        <p class="text-gray-400 mb-8">生成 AWS、GCP、Azure 云服务配置文件</p>
+
+        <div class="grid md:grid-cols-3 gap-4 mb-8">
+            <div class="glass rounded-xl p-4 text-center hover:bg-white/10 transition cursor-pointer" onclick="selectProvider('aws')">
+                <i class="fab fa-aws text-4xl text-yellow-400 mb-2"></i>
+                <div class="font-semibold">AWS</div>
+                <div class="text-sm text-gray-400">ECS, EKS, Lambda</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center hover:bg-white/10 transition cursor-pointer" onclick="selectProvider('gcp')">
+                <i class="fab fa-google text-4xl text-blue-400 mb-2"></i>
+                <div class="font-semibold">GCP</div>
+                <div class="text-sm text-gray-400">Cloud Run, GKE</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center hover:bg-white/10 transition cursor-pointer" onclick="selectProvider('azure')">
+                <i class="fab fa-microsoft text-4xl text-blue-500 mb-2"></i>
+                <div class="font-semibold">Azure</div>
+                <div class="text-sm text-gray-400">AKS, ACI</div>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-8">
+            <form id="cloud-form" class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">云提供商</label>
+                    <select name="provider" id="provider" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                        <option value="aws">AWS</option>
+                        <option value="gcp">GCP</option>
+                        <option value="azure">Azure</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">应用名称</label>
+                    <input type="text" name="app_name" value="my-app" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">容器镜像</label>
+                    <input type="text" name="image" value="my-app:v1" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">区域 (可选)</label>
+                    <input type="text" name="region" placeholder="如: us-east-1" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="w-full gradient-bg py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                        <i class="fas fa-magic mr-2"></i>生成云服务配置
+                    </button>
+                </div>
+            </form>
+            <div id="result" class="mt-6"></div>
+        </div>
+    </main>
+
+    <script>
+        function selectProvider(provider) {
+            document.getElementById('provider').value = provider;
+        }
+
+        document.getElementById('cloud-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            document.getElementById('result').innerHTML = '<div class="text-center py-8"><i class="fas fa-spinner fa-spin text-4xl text-purple-400"></i></div>';
+            
+            try {
+                const response = await fetch('/api/generate/cloud', { method: 'POST', body: formData });
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('result').innerHTML = `<div class="bg-green-900/50 border border-green-500 rounded-lg p-4 text-green-400"><i class="fas fa-check-circle mr-2"></i>生成了 ${data.configs.length} 个 ${formData.get('provider').toUpperCase()} 配置文件!</div>`;
+                } else {
+                    document.getElementById('result').innerHTML = `<div class="bg-red-900/50 border border-red-500 rounded-lg p-4 text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>${data.error}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<div class="bg-red-900/50 border border-red-500 rounded-lg p-4 text-red-400"><i class="fas fa-exclamation-triangle mr-2"></i>请求失败</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

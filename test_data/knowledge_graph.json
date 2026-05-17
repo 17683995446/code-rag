@@ -1,0 +1,35 @@
+{
+  "nodes": [
+    {
+      "id": "1ea1ec4e-a29e-48fb-a3c5-c385aeb522f2",
+      "label": "Python 是一种编程语言",
+      "type": "fact",
+      "properties": {
+        "source": "demo"
+      },
+      "created_at": "2026-05-16T15:57:38.273013",
+      "updated_at": "2026-05-16T15:57:38.273014"
+    },
+    {
+      "id": "3a02aa2d-b16d-41bb-92e8-e735fe9c4240",
+      "label": "Django 是 Python 的 Web 框架",
+      "type": "fact",
+      "properties": {
+        "source": "demo"
+      },
+      "created_at": "2026-05-16T15:57:38.274029",
+      "updated_at": "2026-05-16T15:57:38.274030"
+    },
+    {
+      "id": "07b7859f-4f45-41ab-a3d7-8e90d8624985",
+      "label": "Docker 用于容器化应用",
+      "type": "fact",
+      "properties": {
+        "category": "devops"
+      },
+      "created_at": "2026-05-16T15:57:38.274793",
+      "updated_at": "2026-05-16T15:57:38.274793"
+    }
+  ],
+  "edges": []
+}

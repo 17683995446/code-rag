@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code RAG v11.0 - 常见问题</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose'
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>❓ 常见问题 (FAQ)</h1>
+            <p class="subtitle">Code RAG v11.0 - 你想知道的一切都在这里！</p>
+            <div class="version-badge">v11.0</div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html" class="nav-link">🏠 总览</a>
+            <a href="architecture.html" class="nav-link">🏗️ 架构图</a>
+            <a href="flow.html" class="nav-link">🔄 流程图</a>
+            <a href="timing.html" class="nav-link">⏱️ 时序图</a>
+            <a href="layers.html" class="nav-link">📦 分层详情</a>
+            <a href="test-results.html" class="nav-link">📊 测试结果</a>
+            <a href="faq.html" class="nav-link active">❓ FAQ</a>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section>
+            <h2>🤔 关于 Code RAG</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Code RAG 是做什么的？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>简单说：</strong>它就像代码库的超级搜索+智能问答助手！</p>
+                        <p><strong>详细说：</strong>你把代码库给它，它会：</p>
+                        <ol style="margin-left: 24px; margin-top: 12px;">
+                            <li>索引所有代码，变成搜索知识库</li>
+                            <li>你用自然语言问问题（比如"登录功能在哪？"）</li>
+                            <li>它找到最相关的代码片段</li>
+                            <li>用LLM给你解释代码的意思！</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>什么是9层架构？为什么要用这么多层？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>简单理解：</strong>就像盖房子，每一层都有专门的分工！</p>
+                        <p><strong>为什么分层：</strong></p>
+                        <ul style="margin-left: 24px; margin-top: 12px;">
+                            <li>🔧 <strong>可维护性</strong> - 每层单独改，不会影响其他层</li>
+                            <li>📦 <strong>可扩展性</strong> - 要加新功能？直接在对应层加</li>
+                            <li>🧪 <strong>可测试性</strong> - 每层都能单独测试</li>
+                            <li>👥 <strong>团队协作</strong> - 不同人可以负责不同层</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>什么是Embedding？为什么要用它？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>生活化比喻：</strong>想象把每段话变成一个坐标点（比如GPS坐标），意思相近的话坐标就离得近！</p>
+                        <p><strong>为什么有用：</strong></p>
+                        <ul style="margin-left: 24px; margin-top: 12px;">
+                            <li>"登录用户"和"验证用户身份"，计算机可能觉得完全不一样</li>
+                            <li>但通过Embedding，它知道这俩在意思上是邻居！</li>
+                            <li>这样搜索就不只是找关键词，而是找"语义相近"的代码！</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>🔧 技术问题</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>什么是"优雅降级"？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>简单理解：</strong>Plan B Plan C Plan D... 就算缺少依赖，系统也要继续工作！</p>
+                        <p><strong>真实例子：</strong></p>
+                        <ol style="margin-left: 24px; margin-top: 12px;">
+                            <li>能用到FAISS向量索引？太好了！</li>
+                            <li>FAISS安装不了？没事，用简化版内存索引</li>
+                            <li>Sentence-Transformers没有？也没事，用简单的文本匹配</li>
+                            <li>总之，系统不能崩溃！</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>BM25搜索是什么？和向量搜索有什么不同？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>BM25搜索：</strong>关键词匹配（就像Google搜索）</p>
+                        <ul style="margin-left: 24px; margin-top: 8px;">
+                            <li>你搜"login"，它找所有包含"login"的地方</li>
+                            <li>精确，但不够智能</li>
+                        </ul>
+                        <p style="margin-top: 16px;"><strong>向量搜索：</strong>语义匹配</p>
+                        <ul style="margin-left: 24px; margin-top: 8px;">
+                            <li>你搜"用户登录"，它会找"验证用户"、"认证"等意思相近的</li>
+                            <li>更智能，但依赖Embedding质量</li>
+                        </ul>
+                        <p style="margin-top: 16px;"><strong>混合搜索：</strong>两者结合，效果最好！</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>什么是代码块过滤？为什么要50个字符？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>简单理解：</strong>把垃圾信息扔掉！</p>
+                        <p><strong>为什么：</strong></p>
+                        <ul style="margin-left: 24px; margin-top: 12px;">
+                            <li>空文件、只有一行的__init__.py，这些没什么用</li>
+                            <li>如果不扔掉，搜索结果会被这些东西污染</li>
+                            <li>50字符是我们的经验值，太短没意义，太长可能漏掉有用的</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>🚀 使用问题</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>如何开始使用？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>3步搞定：</strong></p>
+                        <ol style="margin-left: 24px; margin-top: 12px;">
+                            <li>cd /workspace/code-rag</li>
+                            <li>运行 python demo_github_project.py（会演示索引和搜索）</li>
+                            <li>打开可视化网站：cd visualization && python -m http.server 8080</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>支持哪些编程语言？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>当前：</strong>主要是 Python，但架构支持扩展！</p>
+                        <p><strong>未来：</strong>可以加 JavaScript、Java、Go、Rust 等，只需要加对应的解析器就行。</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>索引一个大代码库需要多长时间？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>测试数据：</strong></p>
+                        <ul style="margin-left: 24px; margin-top: 12px;">
+                            <li>中型项目（100-200个文件）：几秒钟</li>
+                            <li>大型项目（上千文件）：几分钟</li>
+                        </ul>
+                        <p style="margin-top: 16px;"><strong>好消息：</strong>只需要索引一次，之后就很快了！</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>📊 关于测试和性能</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>综合评分95.94是怎么来的？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>多维度评分：</strong></p>
+                        <ul style="margin-left: 24px; margin-top: 12px;">
+                            <li>代码质量、架构设计、可维护性</li>
+                            <li>测试覆盖率、性能指标</li>
+                            <li>真实项目测试表现</li>
+                            <li>文档完善度</li>
+                        </ul>
+                        <p style="margin-top: 16px;">这些加起来综合得出的！</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>搜索真的有那么快吗？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>实测数据：</strong></p>
+                        <ul style="margin-left: 24px; margin-top: 12px;">
+                            <li>BM25搜索：小于10ms（毫秒）</li>
+                            <li>向量搜索：取决于索引大小，通常也是毫秒级</li>
+                        </ul>
+                        <p style="margin-top: 16px;">眨眼都要100-400ms，你说快不快！</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>这个项目可以直接用于生产吗？</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>答案：</strong>是的，但建议做一些生产化调整！</p>
+                        <p style="margin-top: 12px;">我们现在有了：</p>
+                        <ul style="margin-left: 24px; margin-top: 8px;">
+                            <li>完整的9层架构</li>
+                            <li>优雅降级机制</li>
+                            <li>真实组件集成（Sentence-Transformers、FAISS、多LLM）</li>
+                            <li>全面的测试套件</li>
+                        </ul>
+                        <p style="margin-top: 16px;"><strong>建议再加：</strong>用户权限系统、持久化存储、API网关、监控告警...这些取决于你的具体需求！</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 Code RAG v11.0 - 生产级代码搜索引擎</p>
+            <p class="footer-links">
+                <a href="index.html">总览</a> |
+                <a href="architecture.html">架构图</a> |
+                <a href="flow.html">流程图</a> |
+                <a href="timing.html">时序图</a>
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const answer = faqItem.querySelector('.faq-answer');
+                const icon = question.querySelector('.faq-icon');
+                
+                if (answer.style.display === 'none' || !answer.style.display) {
+                    answer.style.display = 'block';
+                    icon.textContent = '−';
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    answer.style.display = 'none';
+                    icon.textContent = '+';
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+        
+        // Initialize all answers as closed
+        document.querySelectorAll('.faq-answer').forEach(answer => {
+            answer.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

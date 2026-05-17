@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code RAG v11.0 - 时序图</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose'
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>⏱️ 时序图</h1>
+            <p class="subtitle">Code RAG v11.0 - 核心流程时序</p>
+            <div class="version-badge">v11.0</div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html" class="nav-link">🏠 总览</a>
+            <a href="architecture.html" class="nav-link">🏗️ 架构图</a>
+            <a href="flow.html" class="nav-link">🔄 流程图</a>
+            <a href="timing.html" class="nav-link active">⏱️ 时序图</a>
+            <a href="layers.html" class="nav-link">📦 分层详情</a>
+            <a href="test-results.html" class="nav-link">📊 测试结果</a>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section>
+            <h2>代码索引流程时序图</h2>
+            <div class="mermaid">
+sequenceDiagram
+    participant User as 用户
+    participant API as API Layer
+    participant SVC as Service Layer
+    participant Data as Data Layer
+    participant Proc as Processing Layer
+    participant Search as Search Layer
+    participant RAG as RAG Engine
+    
+    User->>API: POST /api/index
+    API->>SVC: 开始索引任务
+    SVC->>Data: 扫描项目目录
+    Data->>Data: 过滤文件类型
+    Data->>Data: CodeParser解析
+    Data->>Proc: 文本分块
+    Proc->>Proc: 检查块大小>=50
+    Proc->>Search: BM25索引构建
+    Proc->>RAG: Embedding生成
+    RAG->>RAG: 向量索引构建
+    Search->>Data: 持久化存储
+    Data->>SVC: 返回进度更新
+    SVC->>API: 返回索引完成
+    API->>User: 200 OK
+            </div>
+        </section>
+        
+        <section>
+            <h2>搜索查询流程时序图</h2>
+            <div class="mermaid">
+sequenceDiagram
+    participant User as 用户
+    participant API as API Layer
+    participant Mid as Middleware
+    participant SVC as Service Layer
+    participant Search as Search Layer
+    participant RAG as RAG Engine
+    participant Obs as Observability
+    
+    User->>API: GET /api/search?q=...
+    API->>Mid: 认证检查
+    Mid->>Mid: 速率限制检查
+    Mid->>SVC: 查询请求
+    SVC->>Search: BM25搜索
+    SVC->>RAG: 向量搜索
+    Search-->>SVC: BM25结果
+    RAG-->>SVC: 向量结果
+    SVC->>Search: 混合搜索+重排序
+    Search-->>SVC: 最终搜索结果
+    SVC->>RAG: LLM答案生成
+    RAG->>RAG: 位置权重+密度计算
+    RAG-->>SVC: 生成答案
+    SVC->>API: 返回结果
+    SVC->>Obs: 记录指标
+    API->>User: 200 OK
+            </div>
+        </section>
+        
+        <section>
+            <h2>混合搜索详细时序图</h2>
+            <div class="mermaid">
+sequenceDiagram
+    participant Query as 查询
+    participant BM25 as BM25搜索
+    participant Vector as 向量搜索
+    participant Merge as 结果合并
+    participant Rerank as 重排序
+    participant Fallback as 模糊搜索回退
+    
+    Query->>Query: 分词+扩展
+    Query->>BM25: 关键词搜索
+    Query->>Vector: 向量化搜索
+    BM25->>Merge: 返回BM25结果
+    Vector->>Merge: 返回向量结果
+    Merge->>Rerank: 合并结果
+    Rerank->>Rerank: 位置权重
+    Rerank->>Rerank: 密度得分
+    alt 结果>0
+        Rerank->>Rerank: 最终排序
+    else 结果=0
+        Rerank->>Fallback: 模糊搜索
+        Fallback->>Fallback: 前缀/子串匹配
+        Fallback-->>Rerank: 模糊结果
+    end
+    Rerank-->>Query: 搜索结果
+            </div>
+        </section>
+        
+        <section>
+            <h2>LLM多后端调用时序图</h2>
+            <div class="mermaid">
+sequenceDiagram
+    participant App as 应用
+    participant OpenAI as OpenAI API
+    participant Anthropic as Anthropic API
+    participant Local as 本地模型
+    participant Rule as 规则引擎
+    
+    App->>OpenAI: 尝试 OpenAI
+    alt 成功
+        OpenAI-->>App: 返回结果
+    else 失败
+        App->>Anthropic: 尝试 Anthropic
+        alt 成功
+            Anthropic-->>App: 返回结果
+        else 失败
+            App->>Local: 尝试本地模型
+            alt 成功
+                Local-->>App: 返回结果
+            else 失败
+                App->>Rule: 智能规则引擎
+                Rule-->>App: 规则匹配结果
+            end
+        end
+    end
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 Code RAG v11.0 - 生产级代码搜索引擎</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -478,15 +478,11 @@ class RAGPipeline:
             )
     
     def _generate_answer(self, question: str, context: str, sources: List[SearchResultItem]) -> str:
-        """生成回答"""
-        # 简化版本：在生产中应该调用真正的LLM
-        answer = f"基于 {len(sources)} 个相关文档回答您的问题：\n\n"
-        answer += f"问题: {question}\n\n"
-        answer += "在生产环境中，这里会调用 OpenAI/Anthropic 等LLM生成高质量回答。\n"
-        answer += "当前是简化演示版本。\n\n"
-        answer += f"相关主题: {', '.join([s.metadata.get('topic', '未知') for s in sources[:3]])}"
+        """生成回答 - 使用真实LLM"""
+        from .llm import generate_rag_answer, has_llm
         
-        return answer
+        # 使用真实的LLM生成回答
+        return generate_rag_answer(question, context, len(sources))
 
 
 # ============================================================================

@@ -64,3 +64,12 @@ temp/
 # Downloaded models (if any)
 models/
 checkpoints/
+
+# Embedded git repositories (test projects)
+ansible_test_project/
+django_test_project/
+flask_test_project/
+vscode_test_project/
+
+# Ignore embedded .git directories
+*/.git/

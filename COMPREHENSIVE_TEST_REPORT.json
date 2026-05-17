@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-05-15T11:28:46.431588",
+  "projects_tested": 2,
+  "all_issues": {
+    "search_issues": [
+      {
+        "query": "configuration",
+        "issue": "low_relevance",
+        "top_result": "    def setup(self):\n        \"\"\"CaseInsensitiveDict instance with \"Accept\" header.\"\"\"\n        self.c"
+      },
+      {
+        "query": "cache",
+        "issue": "low_relevance",
+        "top_result": "    def end_of_request(exception):\n        buffer.append(exception)\n\n    try:\n        raise Exceptio"
+      }
+    ],
+    "parse_errors": [
+      {
+        "file": "/tmp/tmp7mmpbku9/flask/README.md",
+        "error": "'NoneType' object has no attribute 'content'",
+        "type": "AttributeError"
+      }
+    ]
+  },
+  "edge_results": {
+    "tests": [
+      {
+        "test": "empty_query",
+        "passed": true
+      },
+      {
+        "test": "special_chars",
+        "passed": true
+      },
+      {
+        "test": "long_query",
+        "passed": true
+      },
+      {
+        "test": "unicode_query",
+        "passed": true
+      }
+    ],
+    "passed": 4,
+    "failed": 0
+  }
+}

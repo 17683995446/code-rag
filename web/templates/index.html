@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code RAG v24.0 - 云原生配置生成器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <nav class="glass sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                    <i class="fas fa-cloud text-white text-xl"></i>
+                </div>
+                <span class="text-xl font-bold">Code RAG <span class="text-purple-400">v24.0</span></span>
+            </div>
+            <div class="flex gap-6">
+                <a href="/" class="hover:text-purple-400 transition">首页</a>
+                <a href="/kubernetes" class="hover:text-purple-400 transition">Kubernetes</a>
+                <a href="/docker" class="hover:text-purple-400 transition">Docker</a>
+                <a href="/cloud" class="hover:text-purple-400 transition">云服务</a>
+                <a href="/cicd" class="hover:text-purple-400 transition">CI/CD</a>
+                <a href="/evaluate" class="hover:text-purple-400 transition">评分</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="gradient-bg py-20 px-6">
+        <div class="max-w-4xl mx-auto text-center animate-fade-in">
+            <h1 class="text-5xl font-bold mb-6">
+                <i class="fas fa-rocket mr-4"></i>云原生配置生成器
+            </h1>
+            <p class="text-xl text-purple-100 mb-8">
+                一站式生成 Kubernetes、Docker、云服务、CI/CD 配置文件<br>
+                48 个优化点 · 3 大云厂商 · 5 大 CI/CD 平台
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="#features" class="bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-purple-100 transition">
+                    了解更多
+                </a>
+                <a href="/kubernetes" class="glass px-8 py-3 rounded-full font-semibold hover:bg-white/20 transition">
+                    立即体验
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">✨ 核心功能</h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="glass rounded-2xl p-6 card-hover transition-all duration-300">
+                    <div class="w-14 h-14 bg-blue-500 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-dharmachakra text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Kubernetes</h3>
+                    <p class="text-gray-400 text-sm">Deployment、Service、HPA、Ingress、NetworkPolicy、RBAC 等 12 个优化点</p>
+                </div>
+                <div class="glass rounded-2xl p-6 card-hover transition-all duration-300">
+                    <div class="w-14 h-14 bg-blue-400 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fab fa-docker text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Docker</h3>
+                    <p class="text-gray-400 text-sm">多阶段构建、多架构、安全配置、健康检查等 12 个优化点</p>
+                </div>
+                <div class="glass rounded-2xl p-6 card-hover transition-all duration-300">
+                    <div class="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-cloud text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">云服务</h3>
+                    <p class="text-gray-400 text-sm">AWS ECS/EKS、Cloud Run、AKS 等 12 个优化点</p>
+                </div>
+                <div class="glass rounded-2xl p-6 card-hover transition-all duration-300">
+                    <div class="w-14 h-14 bg-green-500 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-infinity text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">CI/CD</h3>
+                    <p class="text-gray-400 text-sm">GitHub Actions、GitLab CI、Jenkins 等 12 个优化点</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 bg-gray-800">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">📊 性能指标</h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-green-400 mb-2">48</div>
+                    <div class="text-gray-400">优化点</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-blue-400 mb-2">0.01ms</div>
+                    <div class="text-gray-400">生成速度</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-purple-400 mb-2">100%</div>
+                    <div class="text-gray-400">测试通过</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-orange-400 mb-2">8.12</div>
+                    <div class="text-gray-400">综合评分</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">🚀 快速开始</h2>
+            <div class="glass rounded-2xl p-8 text-left">
+                <div class="mb-4">
+                    <span class="bg-green-500 text-white px-3 py-1 rounded text-sm">CLI</span>
+                </div>
+                <pre class="bg-gray-800 rounded-lg p-4 overflow-x-auto"><code class="text-green-400"># 安装
+pip install code-rag
+
+# 生成 Kubernetes 配置
+code-rag kubernetes -n my-app -i my-app:v1 -p 8080
+
+# 生成 Docker 配置
+code-rag docker -n my-app -l python
+
+# 生成完整配置栈
+code-rag all -n my-app -c aws -p github_actions</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <footer class="glass py-8 px-6 text-center text-gray-400">
+        <p>Code RAG v24.0 · 云原生配置生成器 · MIT License</p>
+        <p class="mt-2">基于 Pydantic、PyYAML、FastAPI 构建</p>
+    </footer>
+</body>
+</html>

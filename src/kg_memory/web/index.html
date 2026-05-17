@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识图谱记忆系统 v4.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.6/vis-network.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white min-h-screen">
+    
+    <!-- 导航栏 -->
+    <nav class="glass backdrop-blur-xl bg-white/10 border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-brain text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                            知识图谱记忆系统
+                        </h1>
+                        <p class="text-xs text-gray-400">v4.0 · Powered by NetworkX</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="#stats" class="text-gray-300 hover:text-white transition px-4 py-2 rounded-lg hover:bg-white/10">
+                        <i class="fas fa-chart-line mr-2"></i>统计
+                    </a>
+                    <a href="#memory" class="text-gray-300 hover:text-white transition px-4 py-2 rounded-lg hover:bg-white/10">
+                        <i class="fas fa-save mr-2"></i>记忆
+                    </a>
+                    <a href="#graph" class="text-gray-300 hover:text-white transition px-4 py-2 rounded-lg hover:bg-white/10">
+                        <i class="fas fa-project-diagram mr-2"></i>图谱
+                    </a>
+                    <a href="/docs" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-xl font-semibold hover:shadow-lg transition">
+                        <i class="fas fa-book mr-2"></i>API文档
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero 区域 -->
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto text-center animate-fade-in">
+            <div class="mb-8">
+                <i class="fas fa-atom text-8xl bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent"></i>
+            </div>
+            <h1 class="text-6xl font-extrabold mb-6 leading-tight">
+                记住一切<br>
+                <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">关联知识</span>
+            </h1>
+            <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+                工业化知识图谱记忆系统，基于NetworkX打造，支持记忆、连接、推理、可视化
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="#memory" class="group bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 px-10 py-4 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/50 transition">
+                    <i class="fas fa-lightbulb mr-3"></i>开始使用
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+                </a>
+                <button onclick="loadDemoData()" class="group bg-white/10 backdrop-blur border border-white/20 px-10 py-4 rounded-2xl font-semibold hover:bg-white/20 transition">
+                    <i class="fas fa-flask mr-3"></i>加载演示
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 统计卡片 -->
+    <section id="stats" class="py-16 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">
+                <i class="fas fa-chart-bar mr-3 text-purple-400"></i>系统统计
+            </h2>
+            <div id="stats-cards" class="grid md:grid-cols-4 gap-6">
+                <div class="glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 text-center hover:bg-white/20 transition">
+                    <div class="text-5xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">0</div>
+                    <div class="text-gray-300 text-lg"><i class="fas fa-cube mr-2"></i>节点</div>
+                </div>
+                <div class="glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 text-center hover:bg-white/20 transition">
+                    <div class="text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">0</div>
+                    <div class="text-gray-300 text-lg"><i class="fas fa-link mr-2"></i>边</div>
+                </div>
+                <div class="glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 text-center hover:bg-white/20 transition">
+                    <div class="text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">0</div>
+                    <div class="text-gray-300 text-lg"><i class="fas fa-tags mr-2"></i>关键词</div>
+                </div>
+                <div class="glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 text-center hover:bg-white/20 transition">
+                    <div class="text-5xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent mb-2">4.0.0</div>
+                    <div class="text-gray-300 text-lg"><i class="fas fa-version mr-2"></i>版本</div>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <button onclick="refreshStats()" class="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl transition">
+                    <i class="fas fa-sync mr-2"></i>刷新
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 记忆管理 -->
+    <section id="memory" class="py-16 px-6 bg-black/20">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">
+                <i class="fas fa-memory mr-3 text-pink-400"></i>记忆管理
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8">
+                    <h3 class="text-xl font-semibold mb-6 flex items-center gap-2">
+                        <i class="fas fa-plus-circle text-green-400 text-2xl"></i>记住新知识
+                    </h3>
+                    <form id="remember-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">知识内容</label>
+                            <input id="remember-input" type="text" 
+                                class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500"
+                                placeholder="例如: Python编程语言">
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:shadow-lg py-3 rounded-xl font-semibold transition">
+                            <i class="fas fa-save mr-2"></i>记住
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8">
+                    <h3 class="text-xl font-semibold mb-6 flex items-center gap-2">
+                        <i class="fas fa-search text-blue-400 text-2xl"></i>回忆知识
+                    </h3>
+                    <form id="recall-form" class="space-y-4">
+                        <input id="recall-input" type="text" 
+                            class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500"
+                            placeholder="搜索...">
+                        <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:shadow-lg py-3 rounded-xl font-semibold transition">
+                            <i class="fas fa-search mr-2"></i>回忆
+                        </button>
+                    </form>
+                    <div id="recall-results" class="mt-4 space-y-2"></div>
+                </div>
+            </div>
+            
+            <div class="mt-8 glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8">
+                <h3 class="text-xl font-semibold mb-6 flex items-center gap-2">
+                    <i class="fas fa-link text-purple-400 text-2xl"></i>连接知识
+                </h3>
+                <div class="grid md:grid-cols-4 gap-4">
+                    <input id="connect-source" type="text" class="bg-white/10 border border-white/20 rounded-xl px-4 py-3" placeholder="源知识">
+                    <select id="connect-relation" class="bg-white/10 border border-white/20 rounded-xl px-4 py-3">
+                        <option value="related_to">相关</option>
+                        <option value="uses">使用</option>
+                        <option value="is_a">是一种</option>
+                        <option value="part_of">属于</option>
+                    </select>
+                    <input id="connect-target" type="text" class="bg-white/10 border border-white/20 rounded-xl px-4 py-3" placeholder="目标知识">
+                    <button onclick="connectKnowledge()" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-lg rounded-xl font-semibold transition">
+                        <i class="fas fa-plug mr-2"></i>连接
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 可视化图谱 -->
+    <section id="graph" class="py-16 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-10">
+                <i class="fas fa-project-diagram mr-3 text-indigo-400"></i>知识图谱
+            </h2>
+            <div class="glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-4">
+                <div id="knowledge-graph" class="bg-black/30 rounded-2xl" style="height: 600px;"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 推理 -->
+    <section class="py-16 px-6 bg-black/20">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">
+                <i class="fas fa-lightbulb mr-3 text-yellow-400"></i>知识推理
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8">
+                    <h3 class="text-xl font-semibold mb-4">推理查询</h3>
+                    <div class="space-y-4">
+                        <input id="infer-input" type="text" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3" placeholder="例如: Python">
+                        <div class="flex gap-2">
+                            <input id="infer-depth" type="number" value="3" min="1" max="10" class="w-24 bg-white/10 border border-white/20 rounded-xl px-4 py-3">
+                            <span class="py-3 text-gray-400">深度</span>
+                        </div>
+                        <button onclick="doInference()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 py-3 rounded-xl font-semibold hover:shadow-lg transition">
+                            <i class="fas fa-brain mr-2"></i>开始推理
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="glass backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8">
+                    <h3 class="text-xl font-semibold mb-4">推理结果</h3>
+                    <div id="inference-results" class="space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer class="py-12 px-6 border-t border-white/10">
+        <div class="max-w-6xl mx-auto text-center text-gray-400">
+            <p class="text-lg">🧠 知识图谱记忆系统 v4.0</p>
+            <p class="mt-2 text-sm">Built with NetworkX, FastAPI, and ❤️</p>
+            <div class="flex justify-center gap-6 mt-6">
+                <a href="/docs" class="text-gray-400 hover:text-purple-400 transition">API文档</a>
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition">GitHub</a>
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition">案例</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        let network = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initGraph();
+            refreshStats();
+            setupEventListeners();
+        });
+        
+        function setupEventListeners() {
+            document.getElementById('remember-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                rememberKnowledge();
+            });
+            document.getElementById('recall-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                recallKnowledge();
+            });
+        }
+        
+        function initGraph() {
+            const container = document.getElementById('knowledge-graph');
+            const nodes = new vis.DataSet([]);
+            const edges = new vis.DataSet([]);
+            const data = { nodes, edges };
+            const options = {
+                nodes: { shape: 'dot', size: 30, font: { size: 16, color: '#fff' } },
+                edges: { smooth: true, width: 2, color: '#7c3aed' },
+                physics: { enabled: true },
+            };
+            network = new vis.Network(container, data, options);
+        }
+        
+        async function refreshStats() {
+            try {
+                const response = await fetch('/stats');
+                const stats = await response.json();
+                
+                const cards = document.querySelectorAll('#stats-cards > div');
+                if (cards.length >= 4) {
+                    cards[0].querySelector('.text-5xl').textContent = stats.nodes;
+                    cards[1].querySelector('.text-5xl').textContent = stats.edges;
+                    cards[2].querySelector('.text-5xl').textContent = stats.keywords || 0;
+                }
+                
+                updateGraphVisualization();
+            } catch (e) {
+                console.error('Failed to refresh stats', e);
+            }
+        }
+        
+        async function rememberKnowledge() {
+            const input = document.getElementById('remember-input');
+            const knowledge = input.value.trim();
+            
+            if (!knowledge) return;
+            
+            try {
+                const response = await fetch('/remember', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ knowledge, properties: {} })
+                });
+                
+                if (response.ok) {
+                    input.value = '';
+                    refreshStats();
+                    showNotification('知识已记住', 'success');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        
+        async function recallKnowledge() {
+            const query = document.getElementById('recall-input').value.trim();
+            if (!query) return;
+            
+            try {
+                const response = await fetch(`/recall/${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                const container = document.getElementById('recall-results');
+                if (data.results.length === 0) {
+                    container.innerHTML = '<div class="text-gray-400 text-center py-4">未找到相关知识</div>';
+                } else {
+                    container.innerHTML = data.results.slice(0, 5).map(r => `
+                        <div class="bg-white/10 rounded-xl p-3">
+                            <div class="font-semibold">${r.label}</div>
+                            <div class="text-xs text-gray-400">${r.type} · ${r.id.substring(0, 8)}...</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        
+        async function connectKnowledge() {
+            const source = document.getElementById('connect-source').value.trim();
+            const target = document.getElementById('connect-target').value.trim();
+            const relation = document.getElementById('connect-relation').value;
+            
+            if (!source || !target) return;
+            
+            try {
+                const response = await fetch('/connect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ source, target, relation, weight: 1.0 })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('connect-source').value = '';
+                    document.getElementById('connect-target').value = '';
+                    refreshStats();
+                    showNotification('知识已连接', 'success');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        
+        async function doInference() {
+            const concept = document.getElementById('infer-input').value.trim();
+            const depth = parseInt(document.getElementById('infer-depth').value);
+            
+            if (!concept) return;
+            
+            try {
+                const response = await fetch(`/infer/${encodeURIComponent(concept)}?depth=${depth}`);
+                const data = await response.json();
+                
+                const container = document.getElementById('inference-results');
+                if (data.results.length === 0) {
+                    container.innerHTML = '<div class="text-gray-400 text-center py-4">未找到推理结果</div>';
+                } else {
+                    container.innerHTML = data.results.slice(0, 10).map(r => `
+                        <div class="bg-white/10 rounded-xl p-3 flex items-center gap-3">
+                            <span class="text-purple-400">${r.source}</span>
+                            <span class="text-yellow-400">${r.relation}</span>
+                            <span class="text-cyan-400">${r.target}</span>
+                            <span class="text-xs text-gray-500">(${r.depth})</span>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        
+        async function loadDemoData() {
+            const demo = async (fn) => {
+                await fetch('/remember', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(fn) });
+            };
+            
+            const items = [
+                { knowledge: "Python" },
+                { knowledge: "Django" },
+                { knowledge: "Flask" },
+                { knowledge: "JavaScript" },
+                { knowledge: "React" },
+                { knowledge: "Vue" },
+                { knowledge: "Programming" },
+                { knowledge: "Web Development" },
+            ];
+            
+            for (let item of items) {
+                await demo(item);
+            }
+            
+            await fetch('/connect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: "Django", target: "Python", relation: "uses" }) });
+            await fetch('/connect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: "Flask", target: "Python", relation: "uses" }) });
+            await fetch('/connect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: "React", target: "JavaScript", relation: "uses" }) });
+            await fetch('/connect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: "Vue", target: "JavaScript", relation: "uses" }) });
+            await fetch('/connect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: "Python", target: "Programming", relation: "related_to" }) });
+            await fetch('/connect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: "Web Development", target: "Django", relation: "related_to" }) });
+            
+            refreshStats();
+            showNotification('演示数据已加载', 'success');
+        }
+        
+        async function updateGraphVisualization() {
+            try {
+                const response = await fetch('/visualize');
+                const data = await response.json();
+                
+                if (network && data.nodes.length > 0) {
+                    const visNodes = data.nodes.map(n => ({
+                        id: n.id,
+                        label: n.label,
+                        color: { border: '#7c3aed', background: getColorForType(n.type) }
+                    }));
+                    
+                    const visEdges = data.edges.map(e => ({
+                        from: e.source_id,
+                        to: e.target_id,
+                        label: e.type
+                    }));
+                    
+                    network.setData({ nodes: visNodes, edges: visEdges });
+                }
+            } catch (e) {
+                console.error('Failed to update graph', e);
+            }
+        }
+        
+        function getColorForType(type) {
+            const colors = {
+                entity: '#8b5cf6', concept: '#06b6d4', fact: '#22c55e'
+            };
+            return colors[type] || '#8b5cf6';
+        }
+        
+        function showNotification(text, type = 'info') {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+            
+            const notif = document.createElement('div');
+            notif.className = `${colors[type]} text-white px-6 py-3 rounded-xl fixed bottom-8 right-8 z-50 shadow-2xl`;
+            notif.textContent = text;
+            document.body.appendChild(notif);
+            
+            setTimeout(() => notif.remove(), 3000);
+        }
+    </script>
+</body>
+</html>

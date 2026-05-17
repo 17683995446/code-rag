@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code RAG v11.0 - 流程图</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose'
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🔄 流程图</h1>
+            <p class="subtitle">Code RAG v11.0 - 每个步骤都看明白！</p>
+            <div class="version-badge">v11.0</div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html" class="nav-link">🏠 总览</a>
+            <a href="architecture.html" class="nav-link">🏗️ 架构图</a>
+            <a href="flow.html" class="nav-link active">🔄 流程图</a>
+            <a href="timing.html" class="nav-link">⏱️ 时序图</a>
+            <a href="layers.html" class="nav-link">📦 分层详情</a>
+            <a href="test-results.html" class="nav-link">📊 测试结果</a>
+            <a href="faq.html" class="nav-link">❓ FAQ</a>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section>
+            <h2>📁 代码索引流程详解</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 24px;">把代码库变成可搜索的知识库，分几步完成！</p>
+            <div class="mermaid">
+flowchart TD
+    Start([开始索引]) --> Scan[扫描项目目录]
+    Scan --> Filter{过滤文件类型}
+    Filter -->|Python/JS/Java<br>等代码文件| Parse[解析代码文件]
+    Filter -->|其他文件| Skip[跳过该文件]
+    Skip --> Next{更多文件？}
+    
+    Parse --> Extract[提取函数/类/重要代码]
+    Extract --> Chunk[文本分块<br>MIN_CHUNK_SIZE=50]
+    Chunk --> Check{块大小达标？}
+    Check -->|小于50字符| Discard[扔掉小块]
+    Check -->|大于等于50字符| Clean[清洗预处理]
+    
+    Clean --> BM25[构建BM25索引]
+    Clean --> Embedding[生成Embedding向量]
+    
+    Embedding --> VectorIndex[构建FAISS向量索引]
+    
+    BM25 --> Store[持久化存储]
+    VectorIndex --> Store
+    
+    Store --> Cache[更新LRU缓存]
+    
+    Cache --> Next
+    Next -->|是还有文件| Scan
+    Next -->|否全部完成| Complete([索引完成！])
+    
+    style Start fill:#48bb78
+    style Complete fill:#48bb78
+    style Skip fill:#718096
+    style Discard fill:#718096
+            </div>
+            
+            <div class="layer-card" style="margin-top: 32px;">
+                <h3>💡 每个步骤做什么？</h3>
+                <div class="layer-files">
+                    <div class="file-item">
+                        <strong>1️⃣ 扫描项目目录</strong> - 遍历所有文件和文件夹
+                    </div>
+                    <div class="file-item">
+                        <strong>2️⃣ 过滤文件类型</strong> - 只处理代码文件（.py, .js, .java...），图片文档跳过
+                    </div>
+                    <div class="file-item">
+                        <strong>3️⃣ 解析代码文件</strong> - 用CodeParser把代码变成结构化数据
+                    </div>
+                    <div class="file-item">
+                        <strong>4️⃣ 提取代码片段</strong> - 找出函数、类、重要逻辑块
+                    </div>
+                    <div class="file-item">
+                        <strong>5️⃣ 文本分块</strong> - 把大代码切分成易搜索的小块，检查大小（>=50字符）
+                    </div>
+                    <div class="file-item">
+                        <strong>6️⃣ 清洗预处理</strong> - 去掉多余空格、注释（可选）、标准化
+                    </div>
+                    <div class="file-item">
+                        <strong>7️⃣ 构建双索引</strong> - BM25（关键词）+ FAISS（向量语义）同时构建
+                    </div>
+                    <div class="file-item">
+                        <strong>8️⃣ 持久化存储</strong> - 保存到硬盘，下次不用重新索引
+                    </div>
+                    <div class="file-item">
+                        <strong>9️⃣ 更新缓存</strong> - 把热点数据放缓存，加速读取
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>🔍 搜索查询流程详解</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 24px;">你问问题，系统找答案的完整路径！</p>
+            <div class="mermaid">
+flowchart TD
+    Query([用户查询<br>"登录函数在哪？"]) --> Security{安全检查}
+    Security --> RateCheck{请求限流？}
+    RateCheck -->|是，请求过多| Reject[拒绝请求<br>429 Too Many]
+    RateCheck -->|否，正常请求| Validate{输入验证}
+    
+    Validate -->|查询为空或太长| Error[返回错误]
+    Validate -->|查询正常| Tokenize[分词处理]
+    
+    Tokenize --> Expand[查询扩展<br>同义词替换]
+    Expand --> BM25Search[BM25关键词搜索]
+    Expand --> EmbeddingQuery[查询向量化]
+    
+    EmbeddingQuery --> VectorSearch[向量语义搜索]
+    
+    BM25Search --> Merge[结果合并]
+    VectorSearch --> Merge
+    
+    Merge --> Rerank[重排序<br>位置权重+密度得分]
+    
+    Rerank --> Filter2{结果>0？}
+    Filter2 -->|没有找到| Fallback[模糊搜索回退]
+    Fallback --> Generate
+    
+    Filter2 -->|找到结果| Generate[LLM答案生成]
+    
+    Generate --> PostProcess[结果后处理]
+    PostProcess --> CacheUpdate[更新查询缓存]
+    CacheUpdate --> Response([返回结果！])
+    
+    style Query fill:#805ad5
+    style Response fill:#48bb78
+    style Reject fill:#f56565
+    style Error fill:#f56565
+            </div>
+            
+            <div class="layer-card" style="margin-top: 32px;">
+                <h3>💡 搜索每一步详解</h3>
+                <div class="layer-files">
+                    <div class="file-item">
+                        <strong>1️⃣ 安全检查</strong> - 认证用户、限流、防止恶意请求
+                    </div>
+                    <div class="file-item">
+                        <strong>2️⃣ 输入验证</strong> - 检查查询格式、长度、内容合法性
+                    </div>
+                    <div class="file-item">
+                        <strong>3️⃣ 分词+扩展</strong> - 把查询拆成词，然后扩展同义词（"登录"→"认证"）
+                    </div>
+                    <div class="file-item">
+                        <strong>4️⃣ 双路搜索</strong> - 同时进行BM25关键词搜索和向量语义搜索
+                    </div>
+                    <div class="file-item">
+                        <strong>5️⃣ 结果合并</strong> - 把两种搜索结果整合，去重
+                    </div>
+                    <div class="file-item">
+                        <strong>6️⃣ 智能重排序</strong> - 计算位置权重（开头更重要）+ 密度得分（匹配词越多越好）
+                    </div>
+                    <div class="file-item">
+                        <strong>7️⃣ LLM生成答案</strong> - 把搜索结果给LLM，让它生成自然语言回答
+                    </div>
+                    <div class="file-item">
+                        <strong>8️⃣ 后处理+缓存</strong> - 整理格式，缓存热门查询加速下次请求
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>🎯 混合搜索增强详解</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 24px;">关键词+语义+智能重排，三重保障！</p>
+            <div class="mermaid">
+flowchart LR
+    Input[查询输入<br>"用户登录功能"] --> Step1[阶段1: BM25搜索<br>关键词匹配]
+    Step1 --> Step2[阶段2: 向量搜索<br>语义相似]
+    
+    Step2 --> Combine[结果合并<br>去重]
+    Combine --> Weight[权重分配<br>BM25 40% + 向量 60%]
+    
+    Weight --> PosWeight[位置权重<br>开头内容+30%]
+    PosWeight --> Density[密度得分<br>匹配词越多+分]
+    
+    Density --> Rank[最终排序<br>综合得分]
+    Rank --> Cutoff[Top-K截断<br>只留最好的]
+    Cutoff --> Output[搜索结果]
+    
+    subgraph Fallback_Flow[无结果回退流程]
+        F1[无精确匹配？] --> F2[模糊搜索]
+        F2 --> F3[前缀匹配]
+        F3 --> F4[子串匹配]
+        F4 --> F5[重新排序]
+    end
+    
+    Rank -.->|0个结果| F1
+    F5 -.-> Output
+    
+    style Input fill:#805ad5
+    style Output fill:#48bb78
+            </div>
+            
+            <div class="enhancement-cards" style="margin-top: 32px;">
+                <div class="enhancement-card">
+                    <div class="enhancement-icon">⚖️</div>
+                    <h3>BM25 vs 向量，谁重要？</h3>
+                    <p>我们选40% BM25 + 60% 向量，实践证明这个比例平衡了精确匹配和语义理解！</p>
+                </div>
+                <div class="enhancement-card">
+                    <div class="enhancement-icon">📍</div>
+                    <h3>位置权重是什么？</h3>
+                    <p>开头就出现关键词的文档更重要！比如函数名里就有关键词，给+30%分！</p>
+                </div>
+                <div class="enhancement-card">
+                    <div class="enhancement-icon">📈</div>
+                    <h3>密度得分怎么算？</h3>
+                    <p>匹配的词越多，分越高！比如搜"用户登录"，"用户"+"登录"都出现加分！</p>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>🤖 LLM多后端调用流程</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 24px;">多保险策略，总有一个能用！</p>
+            <div class="mermaid">
+flowchart TD
+    Start[开始生成答案] --> Check1{OpenAI可用？}
+    Check1 -->|API key有效| Call1[调用OpenAI API<br>GPT-4/GPT-3.5]
+    Call1 --> CheckA{调用成功？}
+    
+    Check1 -->|OpenAI不可用| Check2{Anthropic可用？}
+    Check2 -->|Claude API正常| Call2[调用Anthropic API]
+    Call2 --> CheckB{调用成功？}
+    
+    Check2 -->|Anthropic不可用| Check3{本地模型？}
+    Check3 -->|本地有模型| Call3[调用本地模型]
+    Call3 --> CheckC{调用成功？}
+    
+    Check3 -->|什么都没有| Rule[智能规则引擎<br>直接用搜索结果]
+    Rule --> Done
+    
+    CheckA -->|失败| Check2
+    CheckB -->|失败| Check3
+    CheckC -->|失败| Rule
+    
+    CheckA -->|成功| Done
+    CheckB -->|成功| Done
+    CheckC -->|成功| Done
+    Done([完成生成！])
+    
+    style Done fill:#48bb78
+    style Rule fill:#805ad5
+            </div>
+            
+            <div class="layer-card" style="margin-top: 32px;">
+                <h3>💡 多后端策略详解</h3>
+                <div class="layer-files">
+                    <div class="file-item">
+                        <strong>首选：OpenAI GPT</strong> - 质量最高，生产首选
+                    </div>
+                    <div class="file-item">
+                        <strong>备选：Anthropic Claude</strong> - 不同的模型供应商，多样性
+                    </div>
+                    <div class="file-item">
+                        <strong>本地：Llama/其他开源</strong> - 数据隐私敏感场景
+                    </div>
+                    <div class="file-item">
+                        <strong>兜底：规则引擎</strong> - 没有LLM也能用！直接返回搜索结果+简单模板
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 Code RAG v11.0 - 生产级代码搜索引擎</p>
+            <p class="footer-links">
+                <a href="index.html">总览</a> |
+                <a href="architecture.html">架构图</a> |
+                <a href="timing.html">时序图</a> |
+                <a href="faq.html">FAQ</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

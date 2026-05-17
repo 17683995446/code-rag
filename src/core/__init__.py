@@ -1,9 +1,10 @@
 """
 Code RAG - 产品级
 基于开源生态的统一RAG系统
+支持真实LLM和Embedding模型集成
 """
 
-__version__ = "1.0.0"
+__version__ = "4.0.0"
 __author__ = "Code RAG Team"
 
 from .rag import (
@@ -33,9 +34,181 @@ from .logger import (
     setup_logging,
     log_context
 )
+from .parser import (
+    CodeParser,
+    parse_file,
+    parse_directory,
+    CodeLanguage,
+    CodeChunk,
+    ParsedDocument
+)
+from .bm25 import (
+    BM25Index,
+    HybridSearch,
+    BM25Result,
+    create_bm25_index,
+    create_hybrid_search
+)
+from .cache import (
+    LRUCache,
+    TTLCache,
+    get_lru_cache,
+    get_ttl_cache,
+    lru_cache_decorator,
+    ttl_cache_decorator
+)
+from .monitor import (
+    MetricsCollector,
+    PerformanceMonitor,
+    get_monitor,
+    monitor
+)
+from .config import (
+    ConfigLoader,
+    ConfigManager,
+    get_config_manager,
+    init_config,
+    get_config,
+    set_config
+)
+from .security import (
+    RateLimiter,
+    InputValidator,
+    SecurityManager,
+    get_security_manager,
+    rate_limit,
+    security_context
+)
+from .backup import (
+    BackupManager,
+    VersionControl,
+    get_backup_manager,
+    get_version_control
+)
+from .evaluator import (
+    RAGEvaluator,
+    EvaluationMetrics,
+    TestCase,
+    EvaluationReport,
+    create_default_test_suite
+)
+from .retrieval import (
+    QueryPreprocessor,
+    Reranker,
+    MultiRetrieval,
+    ContextWindow,
+    RetrievalPipeline,
+    get_retrieval_pipeline
+)
+from .io import (
+    DataExporter,
+    DataImporter,
+    BatchProcessor,
+    DataPipeline,
+    get_exporter,
+    get_importer,
+    export_data,
+    import_data
+)
+from .prometheus_metrics import (
+    PrometheusMetrics,
+    get_prometheus_metrics
+)
+from .llm import (
+    LLMEngine,
+    LLMResponse,
+    get_llm_engine,
+    has_llm,
+    generate_rag_answer,
+    SmartRuleEngine
+)
+from .semantic_evaluator import (
+    SemanticEvaluator,
+    get_semantic_evaluator,
+    evaluate_retrieval_quick
+)
+from .test_data import (
+    get_test_documents,
+    get_test_queries,
+    get_evaluation_pairs
+)
+from .data_layer import (
+    DataStore,
+    DocumentStore,
+    VectorStore,
+    MemoryDataStore,
+    FileDataStore,
+    JSONDataStore,
+    DataRepository,
+    DocumentDAO,
+    MetadataDAO,
+    create_data_repository,
+    get_memory_store,
+    get_file_store,
+    get_json_store,
+    get_document_dao,
+    get_metadata_dao
+)
+from .processing_layer import (
+    DataProcessor,
+    TextProcessor,
+    VectorProcessor,
+    BasicTextProcessor,
+    AdvancedTextProcessor,
+    EmbeddingProcessor,
+    DataTransformer,
+    DocumentTransformer,
+    DataValidator,
+    DocumentValidator,
+    DataEncoder,
+    HashEncoder,
+    get_text_processor,
+    get_vector_processor,
+    get_document_transformer,
+    get_document_validator,
+    get_hash_encoder
+)
+from .service_layer import (
+    Service,
+    DocumentService,
+    SearchService,
+    EmbeddingService,
+    DocumentRecord,
+    DefaultDocumentService,
+    DefaultSearchService,
+    DefaultEmbeddingService,
+    ServiceManager,
+    RAGService,
+    get_document_service,
+    get_search_service,
+    get_embedding_service,
+    get_rag_service,
+    create_service_manager
+)
+from .middleware_layer import (
+    Middleware,
+    Filter,
+    Interceptor,
+    Request,
+    Response,
+    RequestLoggingMiddleware,
+    TimingMiddleware,
+    ValidationMiddleware,
+    RateLimitingMiddleware,
+    AuthenticationMiddleware,
+    CompressionMiddleware,
+    CORSMiddleware,
+    MiddlewarePipeline,
+    create_default_middleware_pipeline,
+    get_logging_middleware,
+    get_timing_middleware,
+    get_validation_middleware,
+    get_rate_limiting_middleware,
+    get_authentication_middleware,
+    get_cors_middleware
+)
 
 __all__ = [
-    # RAG
     "CodeRAG",
     "RAGPipeline",
     "RAGImplementation",
@@ -44,8 +217,6 @@ __all__ = [
     "SearchResultItem",
     "RAGAnswer",
     "EmbeddingResult",
-    
-    # Settings
     "RAGSettings",
     "get_settings",
     "set_settings",
@@ -55,10 +226,149 @@ __all__ = [
     "StorageSettings",
     "LoggingSettings",
     "APISettings",
-    
-    # Logger
     "get_logger",
     "get_root_logger",
     "setup_logging",
-    "log_context"
+    "log_context",
+    "CodeParser",
+    "parse_file",
+    "parse_directory",
+    "CodeLanguage",
+    "CodeChunk",
+    "ParsedDocument",
+    "BM25Index",
+    "HybridSearch",
+    "BM25Result",
+    "create_bm25_index",
+    "create_hybrid_search",
+    "LRUCache",
+    "TTLCache",
+    "get_lru_cache",
+    "get_ttl_cache",
+    "lru_cache_decorator",
+    "ttl_cache_decorator",
+    "MetricsCollector",
+    "PerformanceMonitor",
+    "get_monitor",
+    "monitor",
+    "ConfigLoader",
+    "ConfigManager",
+    "get_config_manager",
+    "init_config",
+    "get_config",
+    "set_config",
+    "RateLimiter",
+    "InputValidator",
+    "SecurityManager",
+    "get_security_manager",
+    "rate_limit",
+    "security_context",
+    "BackupManager",
+    "VersionControl",
+    "get_backup_manager",
+    "get_version_control",
+    "RAGEvaluator",
+    "EvaluationMetrics",
+    "TestCase",
+    "EvaluationReport",
+    "create_default_test_suite",
+    "QueryPreprocessor",
+    "Reranker",
+    "MultiRetrieval",
+    "ContextWindow",
+    "RetrievalPipeline",
+    "get_retrieval_pipeline",
+    "DataExporter",
+    "DataImporter",
+    "BatchProcessor",
+    "DataPipeline",
+    "get_exporter",
+    "get_importer",
+    "export_data",
+    "import_data",
+    "PrometheusMetrics",
+    "get_prometheus_metrics",
+    "LLMEngine",
+    "LLMResponse",
+    "get_llm_engine",
+    "has_llm",
+    "generate_rag_answer",
+    "SmartRuleEngine",
+    "SemanticEvaluator",
+    "get_semantic_evaluator",
+    "evaluate_retrieval_quick",
+    "get_test_documents",
+    "get_test_queries",
+    "get_evaluation_pairs",
+    # Data Layer
+    "DataStore",
+    "DocumentStore",
+    "VectorStore",
+    "MemoryDataStore",
+    "FileDataStore",
+    "JSONDataStore",
+    "DataRepository",
+    "DocumentDAO",
+    "MetadataDAO",
+    "create_data_repository",
+    "get_memory_store",
+    "get_file_store",
+    "get_json_store",
+    "get_document_dao",
+    "get_metadata_dao",
+    # Processing Layer
+    "DataProcessor",
+    "TextProcessor",
+    "VectorProcessor",
+    "BasicTextProcessor",
+    "AdvancedTextProcessor",
+    "EmbeddingProcessor",
+    "DataTransformer",
+    "DocumentTransformer",
+    "DataValidator",
+    "DocumentValidator",
+    "DataEncoder",
+    "HashEncoder",
+    "get_text_processor",
+    "get_vector_processor",
+    "get_document_transformer",
+    "get_document_validator",
+    "get_hash_encoder",
+    # Service Layer
+    "Service",
+    "DocumentService",
+    "SearchService",
+    "EmbeddingService",
+    "DocumentRecord",
+    "DefaultDocumentService",
+    "DefaultSearchService",
+    "DefaultEmbeddingService",
+    "ServiceManager",
+    "RAGService",
+    "get_document_service",
+    "get_search_service",
+    "get_embedding_service",
+    "get_rag_service",
+    "create_service_manager",
+    # Middleware Layer
+    "Middleware",
+    "Filter",
+    "Interceptor",
+    "Request",
+    "Response",
+    "RequestLoggingMiddleware",
+    "TimingMiddleware",
+    "ValidationMiddleware",
+    "RateLimitingMiddleware",
+    "AuthenticationMiddleware",
+    "CompressionMiddleware",
+    "CORSMiddleware",
+    "MiddlewarePipeline",
+    "create_default_middleware_pipeline",
+    "get_logging_middleware",
+    "get_timing_middleware",
+    "get_validation_middleware",
+    "get_rate_limiting_middleware",
+    "get_authentication_middleware",
+    "get_cors_middleware"
 ]

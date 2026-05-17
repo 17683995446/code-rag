@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code RAG v11.0 - 分层详情</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📦 分层详情</h1>
+            <p class="subtitle">Code RAG v11.0 - 9层架构详解</p>
+            <div class="version-badge">v11.0</div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html" class="nav-link">🏠 总览</a>
+            <a href="architecture.html" class="nav-link">🏗️ 架构图</a>
+            <a href="flow.html" class="nav-link">🔄 流程图</a>
+            <a href="timing.html" class="nav-link">⏱️ 时序图</a>
+            <a href="layers.html" class="nav-link active">📦 分层详情</a>
+            <a href="test-results.html" class="nav-link">📊 测试结果</a>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <div class="layer-card">
+            <div class="layer-header">
+                <div class="layer-number">1</div>
+                <div class="layer-name">
+                    <h3>Base Layer 基础层</h3>
+                    <p>提供系统级基础设施支持</p>
+                </div>
+            </div>
+            <div class="layer-files">
+                <div class="file-item">
+                    <strong>logging_and_diagnostics.py</strong> - 诊断日志系统，带优雅降级
+                </div>
+                <div class="file-item">
+                    <strong>configuration_and_settings.py</strong> - 配置管理与设置
+                </div>
+                <div class="file-item">
+                    <strong>security_and_access_control.py</strong> - 安全与访问控制
+                </div>
+                <div class="file-item">
+                    <strong>performance_monitoring.py</strong> - 性能监控组件
+                </div>
+            </div>
+        </div>
+        
+        <div class="layer-card">
+            <div class="layer-header">
+                <div class="layer-number">2</div>
+                <div class="layer-name">
+                    <h3>Data Layer 数据层</h3>
+                    <p>处理数据存储、IO、解析、缓存</p>
+                </div>
+            </div>
+            <div class="layer-files">
+                <div class="file-item">
+                    <strong>code_parser_and_document_processor.py</strong> - 代码解析器，MIN_CHUNK_SIZE=50
+                </div>
+                <div class="file-item">
+                    <strong>data_input_and_output_handler.py</strong> - 数据IO处理
+                </div>
+                <div class="file-item">
+                    <strong>caching_and_in_memory_cache.py</strong> - LRU缓存系统
+                </div>
+                <div class="file-item">
+                    <strong>backup_and_version_control.py</strong> - 备份与版本控制
+                </div>
+                <div class="file-item">
+                    <strong>data_repository_and_storage.py</strong> - 数据存储抽象
+                </div>
+            </div>
+        </div>
+        
+        <div class="layer-card">
+            <div class="layer-header">
+                <div class="layer-number">3</div>
+                <div class="layer-name">
+                    <h3>Processing Layer 处理层</h3>
+                    <p>文本分块与预处理</p>
+                </div>
+            </div>
+            <div class="layer-files">
+                <div class="file-item">
+                    <strong>text_chunking_and_preprocessing.py</strong> - 文本分块器
+                </div>
+                <div class="file-item">
+                    <strong>code_cleaning_and_normalization.py</strong> - 代码清洗与标准化
+                </div>
+            </div>
+        </div>
+        
+        <div class="layer-card">
+            <div class="layer-header">
+                <div class="layer-number">4</div>
+                <div class="layer-name">
+                    <h3>Search Layer 搜索层</h3>
+                    <p>BM25搜索与混合搜索，增强的相关性算法</p>
+                </div>
+            </div>
+            <div class="layer-files">
+                <div class="file-item">
+                    <strong>bm25_search_engine.py</strong> - BM25搜索引擎，同义词扩展+模糊搜索+位置权重+密度得分
+                </div>
+                <div class="file-item">
+                    <strong>hybrid_search_and_ranking.py</strong> - 混合搜索与排序
+                </div>
+            </div>
+        </div>
+        
+        <div class="layer-card">
+            <div class="layer-header">
+                <div class="layer-number">5</div>
+                <div class="layer-name">
+                    <h3>RAG Engine RAG引擎层</h3>
+                    <p>生产级Embedding、向量索引、多后端LLM</p>
+                </div>
+            </div>
+            <div class="layer-files">
+                <div class="file-item">
+                    <strong>embedding_production.py</strong> - 生产级Embedding，Sentence-Transformers集成
+                </div>
+                <div class="file-item">
+                    <strong>vector_index_production.py</strong> - 生产级向量索引，FAISS集成
+                </div>
+                <div class="file-item">
+                    <strong>llm_production.py</strong> - 多后端LLM引擎（OpenAI/Anthropic/Local/Rule）
+                </div>
+                <div class="file-item">
+                    <strong>language_model_and_answer_generator.py</strong> - 语言模型与答案生成
+                </div>
+                <div class="file-item">
+                    <strong>retrieval_pipeline_processor.py</strong> - 检索流水线处理
+                </div>
+                <div class="file-item">
+                    <strong>semantic_search_evaluator.py</strong> - 语义搜索评估器
+                </div>
+            </div>
+        </div>
+        
+        <div class="layer-card">
+            <div class="layer-header">
+                <div class="layer-number">6</div>
+                <div class="layer-name">
+                    <h3>Observability Layer 可观测层</h3>
+                    <p>Prometheus监控、追踪、指标收集</p>
+                </div>
+            </div>
+            <div class="layer-files">
+                <div class="file-item">
+                    <strong>prometheus_monitoring.py</strong> - Prometheus监控
+                </div>
+                <div class="file-item">
+                    <strong>distributed_tracing.py</strong> - 分布式链路追踪
+                </div>
+                <div class="file-item">
+                    <strong>metrics_collection_and_exposure.py</strong> - 指标收集与暴露
+                </div>
+            </div>
+        </div>
+        
+        <div class="layer-card">
+            <div class="layer-header">
+                <div class="layer-number">7</div>
+                <div class="layer-name">
+                    <h3>Service Layer 服务层</h3>
+                    <p>业务逻辑服务</p>
+                </div>
+            </div>
+            <div class="layer-files">
+                <div class="file-item">
+                    <strong>code_search_service.py</strong> - 代码搜索服务
+                </div>
+                <div class="file-item">
+                    <strong>question_answering_service.py</strong> - 问答服务
+                </div>
+            </div>
+        </div>
+        
+        <div class="layer-card">
+            <div class="layer-header">
+                <div class="layer-number">8</div>
+                <div class="layer-name">
+                    <h3>Middleware Layer 中间件层</h3>
+                    <p>认证、限流、日志</p>
+                </div>
+            </div>
+            <div class="layer-files">
+                <div class="file-item">
+                    <strong>authentication_and_authorization.py</strong> - 认证与授权
+                </div>
+                <div class="file-item">
+                    <strong>rate_limiting_and_throttling.py</strong> - 速率限制与节流
+                </div>
+            </div>
+        </div>
+        
+        <div class="layer-card">
+            <div class="layer-header">
+                <div class="layer-number">9</div>
+                <div class="layer-name">
+                    <h3>API Layer API层</h3>
+                    <p>REST API端点</p>
+                </div>
+            </div>
+            <div class="layer-files">
+                <div class="file-item">
+                    <strong>rest_api_endpoints.py</strong> - REST API端点，带优雅降级
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 Code RAG v11.0 - 生产级代码搜索引擎</p>
+        </div>
+    </footer>
+</body>
+</html>

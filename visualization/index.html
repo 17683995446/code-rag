@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code RAG v11.0 - 系统可视化</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose'
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🚀 Code RAG v11.0</h1>
+            <p class="subtitle">生产级代码搜索与问答系统 - 让代码搜索变得简单！</p>
+            <div class="version-badge">v11.0</div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html" class="nav-link active">🏠 总览</a>
+            <a href="architecture.html" class="nav-link">🏗️ 架构图</a>
+            <a href="flow.html" class="nav-link">🔄 流程图</a>
+            <a href="timing.html" class="nav-link">⏱️ 时序图</a>
+            <a href="layers.html" class="nav-link">📦 分层详情</a>
+            <a href="test-results.html" class="nav-link">📊 测试结果</a>
+            <a href="faq.html" class="nav-link">❓ FAQ</a>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section class="hero">
+            <h2>这是什么？</h2>
+            <p>想象一下，你有一个巨大的代码库，像个装满书的图书馆，你想找某本书或某段话，但不知道在哪。Code RAG 就是帮你快速找到它们的系统！</p>
+        </section>
+        
+        <section class="quick-start-guide">
+            <h2>📚 快速入门指南</h2>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>第一步：索引代码</h3>
+                    <p>把你的代码库交给系统，它会像图书管理员一样，把代码拆分成可管理的小块，并记录下来。</p>
+                    <div class="code-block">
+                        <pre>python demo_github_project.py</pre>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>第二步：搜索代码</h3>
+                    <p>用自然语言描述你要找的东西，比如"找一下用户登录的函数"。</p>
+                    <div class="code-block">
+                        <pre>搜索词: "登录认证" 或 "database query"</pre>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>第三步：获得结果</h3>
+                    <p>系统会给你最相关的代码片段和解释！</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">9</div>
+                <div class="stat-label">架构分层</div>
+                <div class="stat-description">像积木一样清晰可扩展</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">95.94</div>
+                <div class="stat-label">综合评分</div>
+                <div class="stat-description">A++ 级别！</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">同义词组</div>
+                <div class="stat-description">理解更准确！</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">&lt;10ms</div>
+                <div class="stat-label">平均搜索延迟</div>
+                <div class="stat-description">毫秒级闪电速度！</div>
+            </div>
+        </section>
+        
+        <section class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>真实的Embedding</h3>
+                <p><strong>简单解释：</strong> 把代码转换成数字向量（想想GPS坐标），让计算机能理解相似的代码片段。</p>
+                <p><strong>技术特点：</strong> 集成 Sentence-Transformers，自动GPU加速，内置LRU缓存。</p>
+                <div class="code-block">
+                    <pre>from code_rag.rag_engine import ProductionEmbeddingEngine
+embed_engine = ProductionEmbeddingEngine()
+vector = embed_engine.encode("def calculate_sum(a, b)")</pre>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>向量索引</h3>
+                <p><strong>简单解释：</strong> 就像图书馆的索引卡片，帮你快速找到相关的内容。</p>
+                <p><strong>技术特点：</strong> FAISS集成，支持多种索引类型，自动优雅降级。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>多后端LLM</h3>
+                <p><strong>简单解释：</strong> 就像有多个智能助手备选，一个不行换下一个！</p>
+                <p><strong>技术特点：</strong> 支持OpenAI、Anthropic、本地模型，还有智能规则引擎兜底。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>混合搜索</h3>
+                <p><strong>简单解释：</strong> 既找关键词（Google搜索），又找语义（像人的理解）。</p>
+                <p><strong>技术特点：</strong> BM25关键词搜索 + 向量语义搜索，智能结果融合排序。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>优雅降级</h3>
+                <p><strong>简单解释：</strong> 即使缺少依赖，系统依然能工作！</p>
+                <p><strong>技术特点：</strong> 完整的try-except优雅降级处理。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>可观测性</h3>
+                <p><strong>简单解释：</strong> 监控系统的心跳和健康状况。</p>
+                <p><strong>技术特点：</strong> Prometheus监控，分布式链路追踪。</p>
+            </div>
+        </section>
+        
+        <section class="search-enhancements">
+            <h2>🎯 我们是如何让搜索更准确的？</h2>
+            <div class="enhancement-cards">
+                <div class="enhancement-card">
+                    <div class="enhancement-icon">📏</div>
+                    <h3>代码块过滤</h3>
+                    <p>只保留50字符以上的有意义内容，避免空文件和小片段干扰。</p>
+                    <div class="metric-badge">MIN_CHUNK_SIZE = 50</div>
+                </div>
+                <div class="enhancement-card">
+                    <div class="enhancement-icon">🔤</div>
+                    <h3>同义词扩展</h3>
+                    <p>理解"function" = "method"，"config" = "configuration"，自动扩展查询。</p>
+                    <div class="metric-badge">25+组同义词</div>
+                </div>
+                <div class="enhancement-card">
+                    <div class="enhancement-icon">📍</div>
+                    <h3>位置权重</h3>
+                    <p>代码开头的关键词更重要（权重+30%），中间也加分（+10%）。</p>
+                </div>
+                <div class="enhancement-card">
+                    <div class="enhancement-icon">📈</div>
+                    <h3>密度得分</h3>
+                    <p>匹配的关键词越多，得分越高（每匹配+0.2分）！</p>
+                </div>
+                <div class="enhancement-card">
+                    <div class="enhancement-icon">🔄</div>
+                    <h3>模糊搜索回退</h3>
+                    <p>没找到精确匹配？没关系！自动尝试模糊、前缀、子串搜索！</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="quick-start">
+            <h2>🚀 快速开始 - 3步走！</h2>
+            <div class="code-block">
+                <pre><code># 1. 克隆并进入项目
+cd /workspace/code-rag
+
+# 2. 运行真实项目测试
+python test_comprehensive_deep.py
+
+# 3. 查看最终评估
+python v11_final_evaluation.py
+
+# 4. 启动可视化网站
+cd visualization
+python -m http.server 8080
+# 然后在浏览器打开：http://localhost:8080
+</code></pre>
+            </div>
+        </section>
+        
+        <section class="overview-diagram">
+            <h2>🗺️ 系统总览图</h2>
+            <div class="mermaid">
+graph TB
+    User((用户)) -->|搜索查询| API[API Layer]
+    User -->|索引代码| API
+    API -->|认证限流| Middleware[Middleware Layer]
+    Middleware -->|业务逻辑| Service[Service Layer]
+    Service -->|混合搜索| RAG[RAG Engine]
+    Service -->|关键词搜索| Search[Search Layer]
+    RAG -->|Embedding| Embedding[Embedding Engine]
+    RAG -->|向量索引| VectorIndex[Vector Index]
+    RAG -->|LLM问答| LLM[Multi-LLM Engine]
+    Search -->|预处理| Processing[Processing Layer]
+    Search -->|BM25索引| Data[Data Layer]
+    Data -->|文件IO| Base[Base Layer]
+    Observability[Observability Layer] -.->|监控系统| Service
+    Observability[Observability Layer] -.->|监控性能| RAG
+    
+    style Base fill:#1a365d
+    style Data fill:#2d3748
+    style Processing fill:#2d3748
+    style Search fill:#2d3748
+    style RAG fill:#553c9a
+    style Service fill:#553c9a
+    style Middleware fill:#553c9a
+    style Observability fill:#744210
+    style API fill:#1a365d
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 Code RAG v11.0 - 生产级代码搜索引擎</p>
+            <p class="footer-links">
+                <a href="architecture.html">架构图</a> |
+                <a href="flow.html">流程图</a> |
+                <a href="timing.html">时序图</a> |
+                <a href="faq.html">FAQ</a>
+            </p>
+        </div>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>

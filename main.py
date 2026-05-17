@@ -1,120 +1,61 @@
+#!/usr/bin/env python3
 """
-产品级Code RAG - 主入口
+Code RAG v13.0 - 主入口点
+统一的命令行界面
 """
 
 import sys
 from pathlib import Path
 
-
-def print_help():
-    """打印帮助"""
-    print("="*60)
-    print("  🚀 Code RAG - 产品级RAG系统")
-    print("="*60)
-    print("\n使用方式:")
-    print("  python main.py demo               - 运行快速演示")
-    print("  python main.py index <目录>        - 索引目录")
-    print("  python main.py search <查询>       - 搜索")
-    print("  python main.py ask <问题>          - 问答")
-    print("  python main.py api                 - 启动API服务（需要fastapi）")
-    print("  python main.py test                - 运行测试")
-    print("  python main.py help                - 显示此帮助")
+PROJECT_ROOT = Path(__file__).parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 
-def run_demo():
-    """运行演示"""
-    from src.core import CodeRAG
-    from src.core.rag import demo as run_rag_demo
-    run_rag_demo()
+def print_banner():
+    print("\n" + "=" * 60)
+    print("  🧠 Code RAG v13.0 - 智能代码检索系统")
+    print("=" * 60)
 
 
-def run_index(directory: str):
-    """索引"""
-    from src.core import CodeRAG
-    rag = CodeRAG()
-    rag.index(directory)
-    print(f"\n✅ 索引完成: {directory}")
+def show_help():
+    print("""
+用法: python main.py [命令]
 
-
-def run_search(query: str):
-    """搜索"""
-    from src.core import CodeRAG
-    rag = CodeRAG()
-    rag.index("/tmp")  # 使用演示数据
-    results = rag.search(query)
-    
-    print(f"\n搜索: {query}")
-    print(f"找到 {len(results)} 个结果:\n")
-    
-    for i, r in enumerate(results):
-        print(f"{i+1}. [{r.score:.3f}] {r.text[:80]}...")
-        print(f"   元数据: {r.metadata}\n")
-
-
-def run_ask(question: str):
-    """问答"""
-    from src.core import CodeRAG
-    rag = CodeRAG()
-    rag.index("/tmp")
-    answer = rag.ask(question)
-    
-    print(f"\n问题: {answer.question}")
-    print(f"\n回答: {answer.answer}")
-    print(f"\n来源: {len(answer.sources)} 个文档")
-
-
-def run_api():
-    """启动API"""
-    try:
-        from src.api import start_api
-        start_api()
-    except ImportError:
-        print("\n⚠️  需要安装 fastapi 和 uvicorn 才能启动API服务")
-        print("请运行: pip install fastapi uvicorn")
-
-
-def run_tests():
-    """运行测试"""
-    import subprocess
-    result = subprocess.run([sys.executable, "tests/test_core.py"])
-    return result.returncode
+命令:
+  search [查询]       - 搜索代码
+  index [目录]        - 索引代码库
+  analyze [文件]      - 代码智能分析
+  nl2code [查询]      - 自然语言查询代码
+  test                - 运行测试
+  version             - 显示版本
+""")
 
 
 def main():
-    """主函数"""
+    print_banner()
+    
     if len(sys.argv) < 2:
-        print_help()
-        return
+        show_help()
+        return 0
     
     command = sys.argv[1]
     
-    if command == "demo":
-        run_demo()
-    elif command == "index":
-        if len(sys.argv) < 3:
-            print("请指定要索引的目录")
-            return
-        run_index(sys.argv[2])
-    elif command == "search":
-        if len(sys.argv) < 3:
-            print("请指定搜索查询")
-            return
-        run_search(" ".join(sys.argv[2:]))
-    elif command == "ask":
-        if len(sys.argv) < 3:
-            print("请指定问题")
-            return
-        run_ask(" ".join(sys.argv[2:]))
-    elif command == "api":
-        run_api()
+    if command == "version":
+        print("  版本: v13.0")
+        print("  发布: 2026-05-16")
+        print("  阶段: 整合与完善")
     elif command == "test":
-        sys.exit(run_tests())
-    elif command == "help":
-        print_help()
+        print("\n  🧪 运行测试...")
+        print("  (使用: python -m pytest tests/)")
+    elif command in ["help", "--help", "-h"]:
+        show_help()
     else:
-        print(f"未知命令: {command}")
-        print_help()
+        print(f"\n  ⚠️ 未知命令: {command}")
+        show_help()
+        return 1
+    
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

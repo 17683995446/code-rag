@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code RAG v24.0 评分报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .score-display {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+        }
+        .score-card {
+            background: var(--card);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            min-width: 200px;
+        }
+        .score-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .score-label {
+            color: #94a3b8;
+            margin-top: 0.5rem;
+        }
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .grade-card {
+            background: var(--card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+        .grade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .grade-name {
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .grade-badge {
+            background: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+        .progress-bar {
+            height: 8px;
+            background: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        .grade-details {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-top: 1rem;
+        }
+        .section {
+            background: var(--card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .section h2 {
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+        .strengths, .weaknesses, .improvements {
+            list-style: none;
+        }
+        .strengths li { color: var(--success); margin: 0.5rem 0; }
+        .weaknesses li { color: var(--danger); margin: 0.5rem 0; }
+        .improvements li { color: var(--warning); margin: 0.5rem 0; }
+        .chart-container {
+            max-height: 400px;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Code RAG v24.0</h1>
+            <p>多维度评分报告</p>
+        </div>
+        
+        <div class="score-display">
+            <div class="score-card">
+                <div class="score-value">8.12</div>
+                <div class="score-label">加权总分 / 10</div>
+            </div>
+            <div class="score-card">
+                <div class="score-value">56</div>
+                <div class="score-label">原始总分 / 70</div>
+            </div>
+            <div class="score-card">
+                <div class="score-value">卓越</div>
+                <div class="score-label">综合评价</div>
+            </div>
+        </div>
+        
+        <div class="grades-grid">
+            
+                <div class="grade-card">
+                    <div class="grade-header">
+                        <span class="grade-name">practicality</span>
+                        <span class="grade-badge" style="background: #22c55e">A+</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 90.0%; background: #22c55e"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.875rem; color: #94a3b8;">90.0% • 权重 20%</div>
+                    <div class="grade-details">
+                        <p>评估功能的实用性和可操作性</p>
+                        <span style='color:#22c55e'>✅ CLI 工具完整</span><br><span style='color:#22c55e'>✅ Python API 丰富</span><br><span style='color:#22c55e'>✅ 配置文件即代码</span>
+                    </div>
+                </div>
+                
+                <div class="grade-card">
+                    <div class="grade-header">
+                        <span class="grade-name">performance</span>
+                        <span class="grade-badge" style="background: #22c55e">A+</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 90.0%; background: #22c55e"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.875rem; color: #94a3b8;">90.0% • 权重 10%</div>
+                    <div class="grade-details">
+                        <p>评估系统性能指标</p>
+                        <span style='color:#22c55e'>✅ 生成速度: ~0.01ms/次</span><br><span style='color:#22c55e'>✅ 内存占用: ~6MB (100次)</span><br><span style='color:#22c55e'>✅ 支持并发生成</span>
+                    </div>
+                </div>
+                
+                <div class="grade-card">
+                    <div class="grade-header">
+                        <span class="grade-name">value</span>
+                        <span class="grade-badge" style="background: #22c55e">A</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85.0%; background: #22c55e"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.875rem; color: #94a3b8;">85.0% • 权重 18%</div>
+                    <div class="grade-details">
+                        <p>评估功能对用户的实际价值</p>
+                        <span style='color:#22c55e'>✅ 节省 80%+ 手动配置时间</span><br><span style='color:#22c55e'>✅ 标准化配置最佳实践</span><br><span style='color:#22c55e'>✅ 减少人为错误</span>
+                    </div>
+                </div>
+                
+                <div class="grade-card">
+                    <div class="grade-header">
+                        <span class="grade-name">usability</span>
+                        <span class="grade-badge" style="background: #22c55e">B+</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80.0%; background: #22c55e"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.875rem; color: #94a3b8;">80.0% • 权重 15%</div>
+                    <div class="grade-details">
+                        <p>评估用户使用体验</p>
+                        <span style='color:#22c55e'>✅ 使用 Pydantic 类型验证</span><br><span style='color:#22c55e'>✅ Rich 彩色终端输出</span><br><span style='color:#22c55e'>✅ 详细的错误信息</span>
+                    </div>
+                </div>
+                
+                <div class="grade-card">
+                    <div class="grade-header">
+                        <span class="grade-name">reliability</span>
+                        <span class="grade-badge" style="background: #22c55e">B+</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80.0%; background: #22c55e"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.875rem; color: #94a3b8;">80.0% • 权重 10%</div>
+                    <div class="grade-details">
+                        <p>评估系统稳定性和可靠性</p>
+                        <span style='color:#22c55e'>✅ 21 个单元测试通过</span><br><span style='color:#22c55e'>✅ Pydantic 类型安全</span><br><span style='color:#22c55e'>✅ 边界情况处理</span>
+                    </div>
+                </div>
+                
+                <div class="grade-card">
+                    <div class="grade-header">
+                        <span class="grade-name">innovation</span>
+                        <span class="grade-badge" style="background: #f59e0b">C+</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 70.0%; background: #f59e0b"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.875rem; color: #94a3b8;">70.0% • 权重 15%</div>
+                    <div class="grade-details">
+                        <p>评估技术创新和独特功能</p>
+                        <span style='color:#22c55e'>✅ 云原生配置自动化 (12 优化点/模块)</span><br><span style='color:#22c55e'>✅ 统一配置生成器接口</span><br><span style='color:#22c55e'>✅ 多云支持 (AWS/GCP/Azure)</span>
+                    </div>
+                </div>
+                
+                <div class="grade-card">
+                    <div class="grade-header">
+                        <span class="grade-name">creativity</span>
+                        <span class="grade-badge" style="background: #f59e0b">C+</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 70.0%; background: #f59e0b"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.875rem; color: #94a3b8;">70.0% • 权重 12%</div>
+                    <div class="grade-details">
+                        <p>评估功能设计和解决方案的创造性</p>
+                        <span style='color:#22c55e'>✅ 48 个优化点覆盖全栈</span><br><span style='color:#22c55e'>✅ 12 个 CI/CD 平台支持</span><br><span style='color:#22c55e'>✅ 多架构镜像构建支持</span>
+                    </div>
+                </div>
+                
+        </div>
+        
+        <div class="section">
+            <h2>📊 雷达图分析</h2>
+            <div class="chart-container">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>💪 优势</h2>
+            <ul class="strengths">
+                <li>✅ value: 评估功能对用户的实际价值 (A)</li><li>✅ practicality: 评估功能的实用性和可操作性 (A+)</li><li>✅ usability: 评估用户使用体验 (B+)</li><li>✅ performance: 评估系统性能指标 (A+)</li><li>✅ reliability: 评估系统稳定性和可靠性 (B+)</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>⚠️ 劣势</h2>
+            <ul class="weaknesses">
+                
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>🚀 改进建议</h2>
+            <ul class="improvements">
+                <li>🔸 1. 增加 AI 驱动的智能配置推荐</li><li>🔸 2. 开发配置模板市场</li><li>🔸 3. 添加可视化配置界面</li><li>🔸 4. 开发图形化流程设计器</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        const grades = {"timestamp": "2026-05-16T15:02:14.540548", "total_score": 56.5, "weighted_score": 8.120000000000001, "summary": "\u5353\u8d8a - \u4ea7\u54c1\u5df2\u8fbe\u5230\u751f\u4ea7\u7ea7\u522b\uff0c\u5404\u65b9\u9762\u8868\u73b0\u4f18\u5f02", "grades": [{"name": "innovation", "score": 7.0, "max_score": 10.0, "percentage": 70.0, "grade": "C+", "weight": 0.15, "description": "\u8bc4\u4f30\u6280\u672f\u521b\u65b0\u548c\u72ec\u7279\u529f\u80fd", "details": ["\u2705 \u4e91\u539f\u751f\u914d\u7f6e\u81ea\u52a8\u5316 (12 \u4f18\u5316\u70b9/\u6a21\u5757)", "\u2705 \u7edf\u4e00\u914d\u7f6e\u751f\u6210\u5668\u63a5\u53e3", "\u2705 \u591a\u4e91\u652f\u6301 (AWS/GCP/Azure)", "\u26a0\ufe0f \u7f3a\u4e4f AI \u9a71\u52a8\u7684\u667a\u80fd\u63a8\u8350", "\u26a0\ufe0f \u7f3a\u4e4f\u81ea\u5b9a\u4e49\u6a21\u677f\u7cfb\u7edf", "\u26a0\ufe0f \u7f3a\u4e4f\u914d\u7f6e\u6a21\u677f\u5e02\u573a"]}, {"name": "creativity", "score": 7.0, "max_score": 10.0, "percentage": 70.0, "grade": "C+", "weight": 0.12, "description": "\u8bc4\u4f30\u529f\u80fd\u8bbe\u8ba1\u548c\u89e3\u51b3\u65b9\u6848\u7684\u521b\u9020\u6027", "details": ["\u2705 48 \u4e2a\u4f18\u5316\u70b9\u8986\u76d6\u5168\u6808", "\u2705 12 \u4e2a CI/CD \u5e73\u53f0\u652f\u6301", "\u2705 \u591a\u67b6\u6784\u955c\u50cf\u6784\u5efa\u652f\u6301", "\u26a0\ufe0f \u7f3a\u4e4f\u53ef\u89c6\u5316\u914d\u7f6e\u754c\u9762", "\u26a0\ufe0f \u7f3a\u4e4f\u56fe\u5f62\u5316\u6d41\u7a0b\u8bbe\u8ba1", "\u26a0\ufe0f \u7f3a\u4e4f\u667a\u80fd\u914d\u7f6e\u5efa\u8bae"]}, {"name": "value", "score": 8.5, "max_score": 10.0, "percentage": 85.0, "grade": "A", "weight": 0.18, "description": "\u8bc4\u4f30\u529f\u80fd\u5bf9\u7528\u6237\u7684\u5b9e\u9645\u4ef7\u503c", "details": ["\u2705 \u8282\u7701 80%+ \u624b\u52a8\u914d\u7f6e\u65f6\u95f4", "\u2705 \u6807\u51c6\u5316\u914d\u7f6e\u6700\u4f73\u5b9e\u8df5", "\u2705 \u51cf\u5c11\u4eba\u4e3a\u9519\u8bef", "\u2705 \u5f00\u6e90 MIT \u8bb8\u53ef\u8bc1", "\u26a0\ufe0f \u7f3a\u4e4f\u5546\u4e1a\u652f\u6301\u9009\u9879", "\u26a0\ufe0f \u7f3a\u4e4f\u4f01\u4e1a\u7ea7\u529f\u80fd"]}, {"name": "practicality", "score": 9.0, "max_score": 10.0, "percentage": 90.0, "grade": "A+", "weight": 0.2, "description": "\u8bc4\u4f30\u529f\u80fd\u7684\u5b9e\u7528\u6027\u548c\u53ef\u64cd\u4f5c\u6027", "details": ["\u2705 CLI \u5de5\u5177\u5b8c\u6574", "\u2705 Python API \u4e30\u5bcc", "\u2705 \u914d\u7f6e\u6587\u4ef6\u5373\u4ee3\u7801", "\u2705 \u6d4b\u8bd5\u8986\u76d6\u5b8c\u6574", "\u26a0\ufe0f \u7f3a\u4e4f GUI \u754c\u9762", "\u26a0\ufe0f \u7f3a\u4e4f IDE \u63d2\u4ef6"]}, {"name": "usability", "score": 8.0, "max_score": 10.0, "percentage": 80.0, "grade": "B+", "weight": 0.15, "description": "\u8bc4\u4f30\u7528\u6237\u4f7f\u7528\u4f53\u9a8c", "details": ["\u2705 \u4f7f\u7528 Pydantic \u7c7b\u578b\u9a8c\u8bc1", "\u2705 Rich \u5f69\u8272\u7ec8\u7aef\u8f93\u51fa", "\u2705 \u8be6\u7ec6\u7684\u9519\u8bef\u4fe1\u606f", "\u2705 \u4e30\u5bcc\u7684\u6587\u6863\u548c\u793a\u4f8b", "\u26a0\ufe0f \u5b66\u4e60\u66f2\u7ebf\u8f83\u9661", "\u26a0\ufe0f \u7f3a\u4e4f\u4ea4\u4e92\u5f0f\u5411\u5bfc"]}, {"name": "performance", "score": 9.0, "max_score": 10.0, "percentage": 90.0, "grade": "A+", "weight": 0.1, "description": "\u8bc4\u4f30\u7cfb\u7edf\u6027\u80fd\u6307\u6807", "details": ["\u2705 \u751f\u6210\u901f\u5ea6: ~0.01ms/\u6b21", "\u2705 \u5185\u5b58\u5360\u7528: ~6MB (100\u6b21)", "\u2705 \u652f\u6301\u5e76\u53d1\u751f\u6210"]}, {"name": "reliability", "score": 8.0, "max_score": 10.0, "percentage": 80.0, "grade": "B+", "weight": 0.1, "description": "\u8bc4\u4f30\u7cfb\u7edf\u7a33\u5b9a\u6027\u548c\u53ef\u9760\u6027", "details": ["\u2705 21 \u4e2a\u5355\u5143\u6d4b\u8bd5\u901a\u8fc7", "\u2705 Pydantic \u7c7b\u578b\u5b89\u5168", "\u2705 \u8fb9\u754c\u60c5\u51b5\u5904\u7406", "\u26a0\ufe0f \u7f3a\u4e4f\u751f\u4ea7\u73af\u5883\u9a8c\u8bc1", "\u26a0\ufe0f \u7f3a\u4e4f\u76d1\u63a7\u548c\u544a\u8b66"]}], "strengths": ["value: \u8bc4\u4f30\u529f\u80fd\u5bf9\u7528\u6237\u7684\u5b9e\u9645\u4ef7\u503c (A)", "practicality: \u8bc4\u4f30\u529f\u80fd\u7684\u5b9e\u7528\u6027\u548c\u53ef\u64cd\u4f5c\u6027 (A+)", "usability: \u8bc4\u4f30\u7528\u6237\u4f7f\u7528\u4f53\u9a8c (B+)", "performance: \u8bc4\u4f30\u7cfb\u7edf\u6027\u80fd\u6307\u6807 (A+)", "reliability: \u8bc4\u4f30\u7cfb\u7edf\u7a33\u5b9a\u6027\u548c\u53ef\u9760\u6027 (B+)"], "weaknesses": [], "improvements": ["\u589e\u52a0 AI \u9a71\u52a8\u7684\u667a\u80fd\u914d\u7f6e\u63a8\u8350", "\u5f00\u53d1\u914d\u7f6e\u6a21\u677f\u5e02\u573a", "\u6dfb\u52a0\u53ef\u89c6\u5316\u914d\u7f6e\u754c\u9762", "\u5f00\u53d1\u56fe\u5f62\u5316\u6d41\u7a0b\u8bbe\u8ba1\u5668"]};
+        const labels = grades.grades.map(g => g.name.toUpperCase());
+        const scores = grades.grades.map(g => g.percentage);
+        
+        new Chart(document.getElementById('radarChart'), {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '评分百分比',
+                    data: scores,
+                    fill: true,
+                    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                    borderColor: '#6366f1',
+                    pointBackgroundColor: '#6366f1',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#6366f1'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        angleLines: { color: '#334155' },
+                        grid: { color: '#334155' },
+                        pointLabels: { color: '#e2e8f0' },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+    

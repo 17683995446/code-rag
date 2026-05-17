@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评分报告 - Code RAG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <nav class="glass sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                    <i class="fas fa-cloud text-white text-xl"></i>
+                </div>
+                <span class="text-xl font-bold">Code RAG <span class="text-purple-400">v24.0</span></span>
+            </a>
+            <div class="flex gap-6">
+                <a href="/" class="hover:text-purple-400 transition">首页</a>
+                <a href="/kubernetes" class="hover:text-purple-400 transition">Kubernetes</a>
+                <a href="/docker" class="hover:text-purple-400 transition">Docker</a>
+                <a href="/cloud" class="hover:text-purple-400 transition">云服务</a>
+                <a href="/cicd" class="hover:text-purple-400 transition">CI/CD</a>
+                <a href="/evaluate" class="text-purple-400 font-semibold">评分</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold mb-2">
+            <i class="fas fa-chart-radar mr-3 text-purple-400"></i>多维度评分报告
+        </h1>
+        <p class="text-gray-400 mb-8">从创新性、创造性、价值量、实用性、易用性等多个维度综合评估</p>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="glass rounded-2xl p-6 text-center">
+                <div class="text-5xl font-bold text-purple-400 mb-2">8.12</div>
+                <div class="text-gray-400">加权总分 / 10</div>
+            </div>
+            <div class="glass rounded-2xl p-6 text-center">
+                <div class="text-5xl font-bold text-green-400 mb-2">56.5</div>
+                <div class="text-gray-400">原始总分 / 70</div>
+            </div>
+            <div class="glass rounded-2xl p-6 text-center">
+                <div class="text-5xl font-bold text-blue-400 mb-2">A</div>
+                <div class="text-gray-400">综合评价</div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <div class="glass rounded-2xl p-6">
+                <h2 class="text-xl font-semibold mb-4">📊 雷达图分析</h2>
+                <canvas id="radarChart" height="300"></canvas>
+            </div>
+            <div class="glass rounded-2xl p-6">
+                <h2 class="text-xl font-semibold mb-4">📈 各维度评分</h2>
+                <div id="grades-list" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="glass rounded-2xl p-6">
+                <h2 class="text-xl font-semibold mb-4 text-green-400">💪 优势</h2>
+                <ul id="strengths" class="space-y-2 text-gray-300"></ul>
+            </div>
+            <div class="glass rounded-2xl p-6">
+                <h2 class="text-xl font-semibold mb-4 text-red-400">⚠️ 劣势</h2>
+                <ul id="weaknesses" class="space-y-2 text-gray-300"></ul>
+            </div>
+            <div class="glass rounded-2xl p-6">
+                <h2 class="text-xl font-semibold mb-4 text-orange-400">🚀 改进建议</h2>
+                <ul id="improvements" class="space-y-2 text-gray-300"></ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const gradesData = [
+            { name: "实用性 (practicality)", percentage: 90, weight: 0.20, description: "评估功能的实用性和可操作性" },
+            { name: "性能 (performance)", percentage: 90, weight: 0.10, description: "评估系统性能指标" },
+            { name: "价值 (value)", percentage: 85, weight: 0.18, description: "评估功能对用户的实际价值" },
+            { name: "易用性 (usability)", percentage: 80, weight: 0.15, description: "评估用户使用体验" },
+            { name: "可靠性 (reliability)", percentage: 80, weight: 0.10, description: "评估系统稳定性和可靠性" },
+            { name: "创新性 (innovation)", percentage: 70, weight: 0.15, description: "评估技术创新和独特功能" },
+            { name: "创造性 (creativity)", percentage: 70, weight: 0.12, description: "评估功能设计的创造性" }
+        ];
+
+        const strengths = [
+            "实用性: 评估功能的实用性和可操作性 (A+)",
+            "性能: 评估系统性能指标 (A+)",
+            "价值: 评估功能对用户的实际价值 (A)"
+        ];
+
+        const weaknesses = [
+            "创新性: 评估技术创新和独特功能 (C+)",
+            "创造性: 评估功能设计的创造性 (C+)"
+        ];
+
+        const improvements = [
+            "增加 AI 驱动的智能配置推荐",
+            "开发配置模板市场",
+            "添加可视化配置界面",
+            "开发图形化流程设计器"
+        ];
+
+        document.getElementById('strengths').innerHTML = strengths.map(s => `<li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-400 mt-1"></i>${s}</li>`).join('');
+        document.getElementById('weaknesses').innerHTML = weaknesses.map(w => `<li class="flex items-start gap-2"><i class="fas fa-exclamation-circle text-red-400 mt-1"></i>${w}</li>`).join('');
+        document.getElementById('improvements').innerHTML = improvements.map((imp, i) => `<li class="flex items-start gap-2"><span class="text-orange-400">${i+1}.</span>${imp}</li>`).join('');
+
+        const gradesList = document.getElementById('grades-list');
+        gradesData.forEach(g => {
+            const color = g.percentage >= 80 ? 'green' : g.percentage >= 70 ? 'yellow' : 'red';
+            gradesList.innerHTML += `
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span>${g.name}</span>
+                        <span class="text-${color}-400">${g.percentage}%</span>
+                    </div>
+                    <div class="h-2 bg-gray-700 rounded overflow-hidden">
+                        <div class="h-full bg-${color}-500 rounded" style="width: ${g.percentage}%"></div>
+                    </div>
+                </div>
+            `;
+        });
+
+        new Chart(document.getElementById('radarChart'), {
+            type: 'radar',
+            data: {
+                labels: gradesData.map(g => g.name.split(' ')[0]),
+                datasets: [{
+                    label: '评分',
+                    data: gradesData.map(g => g.percentage),
+                    fill: true,
+                    backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                    borderColor: '#8b5cf6',
+                    pointBackgroundColor: '#8b5cf6'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        angleLines: { color: '#374151' },
+                        grid: { color: '#374151' },
+                        pointLabels: { color: '#e5e7eb' },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

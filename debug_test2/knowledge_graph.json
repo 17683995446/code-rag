@@ -1,0 +1,31 @@
+{
+  "nodes": [
+    {
+      "id": "db4c8c4c-98ae-468c-9efe-8c1e7de701a4",
+      "label": "B",
+      "type": "entity",
+      "properties": {},
+      "created_at": "2026-05-16T16:12:47.606324",
+      "updated_at": "2026-05-16T16:12:47.606324"
+    },
+    {
+      "id": "de76d7fd-9076-450c-9dea-20983d87d25b",
+      "label": "C",
+      "type": "entity",
+      "properties": {},
+      "created_at": "2026-05-16T16:12:47.606347",
+      "updated_at": "2026-05-16T16:12:47.606347"
+    }
+  ],
+  "edges": [
+    {
+      "id": "4c45f1a7-7b17-48f7-8eb3-0e79450779a0",
+      "source_id": "db4c8c4c-98ae-468c-9efe-8c1e7de701a4",
+      "target_id": "de76d7fd-9076-450c-9dea-20983d87d25b",
+      "type": "related_to",
+      "properties": {},
+      "created_at": "2026-05-16T16:12:47.606353",
+      "weight": 1.0
+    }
+  ]
+}

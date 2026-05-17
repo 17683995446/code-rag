@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识图谱记忆系统 - Knowledge Graph Memory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.6/vis-network.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+        #knowledge-graph { height: 500px; border: 1px solid #374151; border-radius: 12px; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <nav class="glass sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                    <i class="fas fa-brain text-white text-xl"></i>
+                </div>
+                <span class="text-xl font-bold">知识图谱记忆系统 <span class="text-purple-400">v1.0</span></span>
+            </div>
+            <div class="flex gap-6">
+                <a href="#home" class="hover:text-purple-400 transition">首页</a>
+                <a href="#memory" class="hover:text-purple-400 transition">记忆管理</a>
+                <a href="#graph" class="hover:text-purple-400 transition">知识图谱</a>
+                <a href="#inference" class="hover:text-purple-400 transition">推理</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="home" class="gradient-bg py-20 px-6">
+        <div class="max-w-4xl mx-auto text-center animate-fade-in">
+            <h1 class="text-5xl font-bold mb-6">
+                <i class="fas fa-brain mr-4"></i>知识图谱记忆系统
+            </h1>
+            <p class="text-xl text-purple-100 mb-8">
+                存储、检索、推理知识<br>
+                可视化知识网络 · 智能记忆管理 · 语义关联
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="#memory" class="bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-purple-100 transition">
+                    开始记忆
+                </a>
+                <button onclick="loadDemoData()" class="glass px-8 py-3 rounded-full font-semibold hover:bg-white/20 transition">
+                    加载演示数据
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section id="memory" class="py-16 px-6 bg-gray-800">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-10">
+                <i class="fas fa-memory mr-3 text-purple-400"></i>记忆管理
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-6">💾 记住新知识</h3>
+                    <form id="remember-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">知识内容</label>
+                            <textarea id="knowledge-text" rows="3" 
+                                placeholder="输入要记住的知识，如：Python是一种编程语言"
+                                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:border-purple-500 outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">知识类型</label>
+                            <select id="knowledge-type" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                                <option value="entity">实体</option>
+                                <option value="concept">概念</option>
+                                <option value="fact">事实</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full gradient-bg py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                            <i class="fas fa-save mr-2"></i>记住它
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="glass rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-6">🔍 回忆知识</h3>
+                    <form id="recall-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">搜索关键词</label>
+                            <input type="text" id="recall-query" 
+                                placeholder="搜索相关知识，如：Python"
+                                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold transition">
+                            <i class="fas fa-search mr-2"></i>回忆
+                        </button>
+                    </form>
+                    <div id="recall-results" class="mt-6 space-y-3"></div>
+                </div>
+            </div>
+            
+            <div class="mt-8 glass rounded-2xl p-6">
+                <h3 class="text-xl font-semibold mb-4">🔗 连接知识</h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <input type="text" id="source-knowledge" 
+                        placeholder="源知识"
+                        class="bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                    <select id="relation-type" class="bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                        <option value="related_to">相关于</option>
+                        <option value="is_a">是一种</option>
+                        <option value="uses">使用</option>
+                        <option value="part_of">属于</option>
+                    </select>
+                    <input type="text" id="target-knowledge" 
+                        placeholder="目标知识"
+                        class="bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                </div>
+                <button onclick="connectKnowledge()" class="mt-4 gradient-bg px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">
+                    <i class="fas fa-link mr-2"></i>连接
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="graph" class="py-16 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                <i class="fas fa-project-diagram mr-3 text-blue-400"></i>知识图谱可视化
+            </h2>
+            <div class="glass rounded-2xl p-4">
+                <div id="knowledge-graph"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="inference" class="py-16 px-6 bg-gray-800">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-10">
+                <i class="fas fa-lightbulb mr-3 text-yellow-400"></i>知识推理
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-6">💡 推理查询</h3>
+                    <div class="space-y-4">
+                        <input type="text" id="inference-concept" 
+                            placeholder="输入概念进行推理，如：Python"
+                            class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:border-purple-500 outline-none">
+                        <button onclick="doInference()" class="w-full bg-yellow-600 hover:bg-yellow-700 py-3 rounded-lg font-semibold transition">
+                            <i class="fas fa-bolt mr-2"></i>开始推理
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-8">
+                    <h3 class="text-xl font-semibold mb-6">📊 系统统计</h3>
+                    <div id="stats-display" class="grid grid-cols-2 gap-4"></div>
+                    <button onclick="refreshStats()" class="mt-4 w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-semibold transition">
+                        <i class="fas fa-refresh mr-2"></i>刷新统计
+                    </button>
+                </div>
+            </div>
+            
+            <div id="inference-results" class="mt-8 glass rounded-2xl p-6"></div>
+        </div>
+    </section>
+
+    <footer class="glass py-8 px-6 text-center text-gray-400">
+        <p>知识图谱记忆系统 · Knowledge Graph Memory System</p>
+        <p class="mt-2">基于图论的知识存储、检索与推理</p>
+    </footer>
+
+    <script>
+        // 模拟知识图谱数据（前端演示）
+        let demoData = {
+            nodes: [
+                { id: "1", label: "Python", type: "entity" },
+                { id: "2", label: "编程语言", type: "concept" },
+                { id: "3", label: "Web开发", type: "concept" },
+                { id: "4", label: "Django", type: "entity" },
+                { id: "5", label: "Flask", type: "entity" },
+                { id: "6", label: "数据科学", type: "concept" },
+                { id: "7", label: "TensorFlow", type: "entity" },
+                { id: "8", label: "Docker", type: "entity" },
+                { id: "9", label: "容器化", type: "concept" },
+                { id: "10", label: "Kubernetes", type: "entity" }
+            ],
+            edges: [
+                { from: "1", to: "2", label: "is_a", width: 5 },
+                { from: "1", to: "3", label: "used_for", width: 4 },
+                { from: "4", to: "1", label: "uses", width: 3 },
+                { from: "5", to: "1", label: "uses", width: 3 },
+                { from: "1", to: "6", label: "used_for", width: 4 },
+                { from: "7", to: "1", label: "uses", width: 3 },
+                { from: "8", to: "9", label: "related_to", width: 4 },
+                { from: "10", to: "8", label: "manages", width: 4 }
+            ]
+        };
+        
+        let network = null;
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initGraph();
+            refreshStats();
+            loadDemoData();
+        });
+        
+        function initGraph() {
+            const container = document.getElementById('knowledge-graph');
+            
+            const nodes = new vis.DataSet(demoData.nodes.map(n => ({
+                ...n,
+                color: {
+                    border: '#7c3aed',
+                    background: getNodeColor(n.type)
+                }
+            })));
+            
+            const edges = new vis.DataSet(demoData.edges);
+            
+            const data = { nodes, edges };
+            const options = {
+                nodes: { shape: 'dot', size: 30, font: { size: 16 } },
+                edges: { smooth: true },
+                physics: { enabled: true }
+            };
+            
+            network = new vis.Network(container, data, options);
+        }
+        
+        function getNodeColor(type) {
+            const colors = {
+                entity: '#8b5cf6',
+                concept: '#06b6d4',
+                fact: '#22c55e',
+                document: '#f59e0b'
+            };
+            return colors[type] || '#8b5cf6';
+        }
+        
+        function loadDemoData() {
+            alert('演示数据已加载！');
+            updateStats({
+                total_nodes: 10,
+                total_edges: 8,
+                total_sessions: 1,
+                total_keywords: 15
+            });
+        }
+        
+        document.getElementById('remember-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const text = document.getElementById('knowledge-text').value;
+            if (text) {
+                const newNodeId = String(demoData.nodes.length + 1);
+                demoData.nodes.push({
+                    id: newNodeId,
+                    label: text.substring(0, 20),
+                    type: document.getElementById('knowledge-type').value
+                });
+                
+                network.body.data.nodes.add({
+                    id: newNodeId,
+                    label: text.substring(0, 20),
+                    color: {
+                        border: '#7c3aed',
+                        background: getNodeColor(document.getElementById('knowledge-type').value)
+                    }
+                });
+                
+                document.getElementById('knowledge-text').value = '';
+                alert('知识已记住！');
+                refreshStats();
+            }
+        });
+        
+        document.getElementById('recall-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = document.getElementById('recall-query').value;
+            
+            const results = demoData.nodes.filter(n => 
+                n.label.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            displayRecallResults(results);
+        });
+        
+        function displayRecallResults(results) {
+            const container = document.getElementById('recall-results');
+            if (results.length === 0) {
+                container.innerHTML = '<p class="text-gray-400">没有找到相关知识</p>';
+                return;
+            }
+            
+            container.innerHTML = results.map(r => `
+                <div class="bg-gray-700 rounded-lg p-3">
+                    <div class="font-semibold">${r.label}</div>
+                    <div class="text-sm text-gray-400">类型: ${r.type}</div>
+                </div>
+            `).join('');
+        }
+        
+        function connectKnowledge() {
+            const source = document.getElementById('source-knowledge').value;
+            const target = document.getElementById('target-knowledge').value;
+            const relation = document.getElementById('relation-type').value;
+            
+            if (source && target) {
+                const sourceNode = demoData.nodes.find(n => n.label === source) || 
+                    addNode(source);
+                const targetNode = demoData.nodes.find(n => n.label === target) || 
+                    addNode(target);
+                
+                demoData.edges.push({
+                    from: sourceNode.id,
+                    to: targetNode.id,
+                    label: relation,
+                    width: 3
+                });
+                
+                network.body.data.edges.add({
+                    from: sourceNode.id,
+                    to: targetNode.id,
+                    label: relation
+                });
+                
+                document.getElementById('source-knowledge').value = '';
+                document.getElementById('target-knowledge').value = '';
+                alert('知识已连接！');
+            }
+        }
+        
+        function addNode(label) {
+            const id = String(demoData.nodes.length + 1);
+            const node = { id, label, type: 'entity' };
+            demoData.nodes.push(node);
+            network.body.data.nodes.add({
+                id, label, color: { border: '#7c3aed', background: '#8b5cf6' }
+            });
+            return node;
+        }
+        
+        function doInference() {
+            const concept = document.getElementById('inference-concept').value;
+            
+            const related = demoData.edges.filter(e => 
+                demoData.nodes.find(n => n.id === e.from)?.label === concept || 
+                demoData.nodes.find(n => n.id === e.to)?.label === concept
+            );
+            
+            const container = document.getElementById('inference-results');
+            if (related.length === 0) {
+                container.innerHTML = '<p class="text-gray-400">没有找到推理结果</p>';
+            } else {
+                container.innerHTML = `
+                    <h3 class="font-semibold mb-4">推理结果：</h3>
+                    <div class="space-y-3">
+                        ${related.map(r => {
+                            const fromNode = demoData.nodes.find(n => n.id === r.from);
+                            const toNode = demoData.nodes.find(n => n.id === r.to);
+                            return `
+                                <div class="bg-gray-700 rounded-lg p-3">
+                                    ${fromNode?.label} <span class="text-purple-400">${r.label}</span> ${toNode?.label}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+        }
+        
+        function refreshStats() {
+            updateStats({
+                total_nodes: demoData.nodes.length,
+                total_edges: demoData.edges.length,
+                total_sessions: 1,
+                total_keywords: demoData.nodes.length * 2
+            });
+        }
+        
+        function updateStats(stats) {
+            const container = document.getElementById('stats-display');
+            container.innerHTML = `
+                <div class="text-center p-4 bg-gray-700 rounded-lg">
+                    <div class="text-3xl font-bold text-purple-400">${stats.total_nodes}</div>
+                    <div class="text-sm text-gray-400">知识节点</div>
+                </div>
+                <div class="text-center p-4 bg-gray-700 rounded-lg">
+                    <div class="text-3xl font-bold text-blue-400">${stats.total_edges}</div>
+                    <div class="text-sm text-gray-400">知识连接</div>
+                </div>
+                <div class="text-center p-4 bg-gray-700 rounded-lg">
+                    <div class="text-3xl font-bold text-green-400">${stats.total_keywords}</div>
+                    <div class="text-sm text-gray-400">关键词索引</div>
+                </div>
+                <div class="text-center p-4 bg-gray-700 rounded-lg">
+                    <div class="text-3xl font-bold text-yellow-400">${stats.total_sessions}</div>
+                    <div class="text-sm text-gray-400">活动会话</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
