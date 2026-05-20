@@ -1,0 +1,93 @@
+{
+  "start_time": "2026-05-18T05:56:40.972964",
+  "end_time": "2026-05-18T05:59:54.109055",
+  "bugs_found": [],
+  "warnings": [],
+  "performance_issues": [],
+  "tests": {
+    "massive_scale": {
+      "success": true,
+      "node_count": 10000,
+      "edge_count": 30000,
+      "node_throughput": 21660.922169901452,
+      "edge_throughput": 77552.47293841676,
+      "duration": 0.8792948722839355
+    },
+    "extreme_concurrency": {
+      "success": true,
+      "total_operations": 2500,
+      "success_count": 2500,
+      "failure_count": 0,
+      "throughput": 19.734458706780583,
+      "operations": {
+        "query": 441,
+        "recommend": 441,
+        "search": 409,
+        "add": 397,
+        "connect": 378,
+        "semantic": 434
+      },
+      "duration": 126.681964635849
+    },
+    "extreme_edge_cases": {
+      "success": true,
+      "results": [
+        [
+          "empty_label",
+          "success"
+        ],
+        [
+          "huge_string",
+          "success"
+        ],
+        [
+          "unicode",
+          "success"
+        ],
+        [
+          "rapid_ops",
+          "success"
+        ],
+        [
+          "boundary_params",
+          "success"
+        ]
+      ]
+    },
+    "long_running": {
+      "success": true,
+      "total_operations": 40091,
+      "error_count": 0,
+      "avg_throughput": 668.1784744953778,
+      "final_nodes": 13264,
+      "final_edges": 0,
+      "timestamps": [
+        {
+          "time": 5,
+          "operations": 4419,
+          "nodes": 1465,
+          "edges": 0
+        },
+        {
+          "time": 15,
+          "operations": 12373,
+          "nodes": 4107,
+          "edges": 0
+        },
+        {
+          "time": 30,
+          "operations": 22716,
+          "nodes": 7503,
+          "edges": 0
+        }
+      ],
+      "duration": 60.000436305999756
+    },
+    "gnn_extreme": {
+      "success": true,
+      "gnn_duration": 0.7351293563842773,
+      "search_duration": 0.164215087890625,
+      "recommend_duration": 4.356057167053223
+    }
+  }
+}

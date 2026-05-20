@@ -1,0 +1,170 @@
+{
+  "start_time": "2026-05-18T23:44:58.496994",
+  "end_time": "2026-05-18T23:54:59.600823",
+  "duration": 601.103841304779,
+  "stats": {
+    "add_node": 8346,
+    "add_edge": 8298,
+    "search": 8166,
+    "infer": 8235,
+    "semantic": 8180,
+    "recommend": 8077,
+    "errors": 0
+  },
+  "success": true,
+  "checkpoints": [
+    {
+      "phase": 1,
+      "nodes": 203,
+      "edges": 225,
+      "duration": 0.011293411254882812
+    },
+    {
+      "phase": 2,
+      "elapsed": 60.382893323898315,
+      "nodes": 2872,
+      "edges": 2791,
+      "operations": {
+        "add_node": 2670,
+        "add_edge": 2566,
+        "search": 2545,
+        "infer": 2641,
+        "semantic": 2586,
+        "recommend": 2545,
+        "errors": 0
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 120.70005106925964,
+      "nodes": 3984,
+      "edges": 3960,
+      "operations": {
+        "add_node": 3784,
+        "add_edge": 3735,
+        "search": 3692,
+        "infer": 3720,
+        "semantic": 3672,
+        "recommend": 3623,
+        "errors": 0
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 181.09000086784363,
+      "nodes": 4848,
+      "edges": 4794,
+      "operations": {
+        "add_node": 4648,
+        "add_edge": 4569,
+        "search": 4506,
+        "infer": 4480,
+        "semantic": 4509,
+        "recommend": 4446,
+        "errors": 0
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 241.55687069892883,
+      "nodes": 5534,
+      "edges": 5465,
+      "operations": {
+        "add_node": 5334,
+        "add_edge": 5240,
+        "search": 5184,
+        "infer": 5222,
+        "semantic": 5184,
+        "recommend": 5136,
+        "errors": 0
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 302.1588137149811,
+      "nodes": 6168,
+      "edges": 6124,
+      "operations": {
+        "add_node": 5968,
+        "add_edge": 5899,
+        "search": 5811,
+        "infer": 5829,
+        "semantic": 5810,
+        "recommend": 5741,
+        "errors": 0
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 362.81987261772156,
+      "nodes": 6695,
+      "edges": 6694,
+      "operations": {
+        "add_node": 6495,
+        "add_edge": 6469,
+        "search": 6323,
+        "infer": 6399,
+        "semantic": 6333,
+        "recommend": 6289,
+        "errors": 0
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 423.40865421295166,
+      "nodes": 7220,
+      "edges": 7188,
+      "operations": {
+        "add_node": 7020,
+        "add_edge": 6963,
+        "search": 6818,
+        "infer": 6917,
+        "semantic": 6877,
+        "recommend": 6794,
+        "errors": 0
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 484.2609853744507,
+      "nodes": 7692,
+      "edges": 7670,
+      "operations": {
+        "add_node": 7492,
+        "add_edge": 7445,
+        "search": 7318,
+        "infer": 7396,
+        "semantic": 7331,
+        "recommend": 7261,
+        "errors": 0
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 544.8648517131805,
+      "nodes": 8153,
+      "edges": 8111,
+      "operations": {
+        "add_node": 7953,
+        "add_edge": 7886,
+        "search": 7759,
+        "infer": 7864,
+        "semantic": 7804,
+        "recommend": 7699,
+        "errors": 0
+      }
+    }
+  ],
+  "final_stats": {
+    "nodes": 8546,
+    "edges": 8523,
+    "embeddings_count": 8546,
+    "nodes_added": 8546,
+    "edges_added": 8523,
+    "queries": 16446,
+    "inferences": 8285,
+    "embeddings_computed": 17092,
+    "recommendations": 8077,
+    "version": "7.0"
+  }
+}

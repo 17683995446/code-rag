@@ -126,8 +126,27 @@ def init():
     click.echo("  ./start.py init   - 初始化")
     click.echo("  ./start.py demo   - 演示")
     click.echo("  ./start.py web    - 启动Web")
+    click.echo("  ./start.py visualize - 启动架构可视化")
     click.echo("  ./start.py test   - 测试")
     click.echo("  ./start.py score  - 评分\n")
+
+
+@main.command()
+@click.option("--host", default="0.0.0.0", help="监听地址")
+@click.option("--port", default=8080, type=int, help="监听端口")
+def visualize(host: str, port: int):
+    """启动架构可视化服务"""
+    click.secho("\n🎨 启动架构可视化服务\n", fg="cyan", bold=True)
+    click.secho(f"   主页: http://{host}:{port}/", fg="cyan")
+    click.secho(f"   API文档: http://{host}:{port}/docs", fg="blue")
+    click.secho("   📡 文件变化自动监听中...\n", fg="green")
+    
+    try:
+        from visualization_server import start_server
+        start_server()
+    except ImportError:
+        click.secho("⚠️ 缺少依赖，请安装: pip install watchdog", fg="yellow")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

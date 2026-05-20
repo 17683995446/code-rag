@@ -1,0 +1,25 @@
+{
+  "test_type": "10_minute_stress_test",
+  "start_time": "2026-05-18T14:39:40.575733",
+  "end_time": "2026-05-18T14:49:41.575966",
+  "duration": 601.0001173019409,
+  "target_duration": 600,
+  "operations": {
+    "total": 65030,
+    "success": 65030,
+    "failure": 0
+  },
+  "final_stats": {
+    "nodes": 10345,
+    "edges": 9829,
+    "embeddings_count": 10345,
+    "nodes_added": 10345,
+    "edges_added": 9829,
+    "queries": 27670,
+    "inferences": 9322,
+    "embeddings_computed": 10345,
+    "recommendations": 9255,
+    "version": "7.0"
+  },
+  "success": true
+}

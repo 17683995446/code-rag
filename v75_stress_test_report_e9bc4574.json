@@ -1,0 +1,83 @@
+{
+  "test_config": {
+    "duration_minutes": 5,
+    "num_threads": 30
+  },
+  "metrics_summary": {
+    "total_operations": 11871,
+    "success_rate": 1.0,
+    "error_count": 0,
+    "latency": {
+      "connect": {
+        "avg_ms": 0.2737760939210604,
+        "p95_ms": 0.08654594421386719,
+        "p99_ms": 7.969856262207031,
+        "count": 1206
+      },
+      "semantic_search": {
+        "avg_ms": 937.3345374056321,
+        "p95_ms": 1454.9150466918945,
+        "p99_ms": 1724.3287563323975,
+        "count": 2373
+      },
+      "infer": {
+        "avg_ms": 802.6727923258894,
+        "p95_ms": 1292.6504611968994,
+        "p99_ms": 1584.8674774169922,
+        "count": 1157
+      },
+      "recall": {
+        "avg_ms": 803.3745889727365,
+        "p95_ms": 1292.6421165466309,
+        "p99_ms": 1627.7189254760742,
+        "count": 4194
+      },
+      "recommend_connections": {
+        "avg_ms": 810.2412459814003,
+        "p95_ms": 1305.3088188171387,
+        "p99_ms": 1597.482442855835,
+        "count": 1182
+      },
+      "remember": {
+        "avg_ms": 809.2326833281481,
+        "p95_ms": 1284.0702533721924,
+        "p99_ms": 1621.0594177246094,
+        "count": 1759
+      }
+    },
+    "errors": [],
+    "duration": 301.72378635406494
+  },
+  "final_stats": {
+    "nodes": 11759,
+    "edges": 1204,
+    "embeddings_count": 11759,
+    "cache_size": 4152,
+    "semantic_cache_size": 2359,
+    "cache_hits": 42,
+    "cache_misses": 4152,
+    "semantic_cache_hits": 14,
+    "semantic_cache_misses": 2359,
+    "avg_node_add_time_ms": 121.07802986419468,
+    "avg_edge_add_time_ms": 0.2600671445016449,
+    "avg_query_time_ms": 803.3671934489812,
+    "stats": {
+      "nodes_added": 11759,
+      "edges_added": 1204,
+      "queries": 6567,
+      "inferences": 1157,
+      "embeddings_computed": 11759,
+      "recommendations": 1182,
+      "cache_hits": 42,
+      "cache_misses": 4152,
+      "semantic_cache_hits": 14,
+      "semantic_cache_misses": 2359,
+      "node_add_time": 1423.7565531730652,
+      "edge_add_time": 0.31312084197998047,
+      "query_time": 3369.3220093250275,
+      "semantic_search_time": 2224.2772183418274,
+      "infer_time": 928.6779253482819
+    }
+  },
+  "timestamp": "2026-05-19T16:38:05.149394"
+}

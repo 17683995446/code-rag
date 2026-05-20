@@ -1,0 +1,69 @@
+{
+  "summary": {
+    "total_tests": 6,
+    "passed": 6,
+    "issues_found": 2
+  },
+  "issues": [
+    {
+      "test": "scaling",
+      "problem": "查询性能下降 69.0%",
+      "severity": "medium",
+      "details": null,
+      "time": "2026-05-17T17:10:03.869891"
+    },
+    {
+      "test": "scaling",
+      "problem": "查询性能下降 61.2%",
+      "severity": "medium",
+      "details": null,
+      "time": "2026-05-17T17:10:04.134911"
+    }
+  ],
+  "performance": {
+    "long_running_ops_per_sec": 162.66836349080046,
+    "long_running_total_ops": 4884,
+    "long_running_memory_growth": 7.921875,
+    "scaling_data": [
+      {
+        "nodes": 100,
+        "node_rate": 83088.43106180665,
+        "edge_rate": 44062.44353398466,
+        "query_rate": 101704.75266731328,
+        "memory": 0.0
+      },
+      {
+        "nodes": 500,
+        "node_rate": 59340.48272544637,
+        "edge_rate": 80913.84476882516,
+        "query_rate": 31540.863287712436,
+        "memory": 0.0
+      },
+      {
+        "nodes": 1000,
+        "node_rate": 68524.30198173471,
+        "edge_rate": 79006.13443003799,
+        "query_rate": 17344.735753866513,
+        "memory": 0.0
+      },
+      {
+        "nodes": 3000,
+        "node_rate": 82853.72261620213,
+        "edge_rate": 67944.3683482036,
+        "query_rate": 6722.179661831878,
+        "memory": 8.25
+      }
+    ],
+    "concurrent_errors": 0,
+    "concurrent_throughput": 22471.853284542478,
+    "memory_growth": 0.0
+  },
+  "test_results": {
+    "long_running": true,
+    "massive_scaling": true,
+    "concurrent": true,
+    "edge_cases": true,
+    "memory_leak": true,
+    "algorithms": true
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "start_time": "2026-05-19T00:09:10.837494",
+  "end_time": "2026-05-19T00:19:16.117945",
+  "duration": 605.2807796001434,
+  "stats": {},
+  "success": true,
+  "checkpoints": [
+    {
+      "phase": 1,
+      "nodes": 4311,
+      "edges": 10457
+    },
+    {
+      "phase": 2,
+      "elapsed": 60.65688633918762,
+      "nodes": 6554,
+      "edges": 10948,
+      "operations": {
+        "batch_add": 4311,
+        "batch_edge": 10457,
+        "user_add": 2245,
+        "infer": 208,
+        "gnn_compute": 246,
+        "user_connect": 491,
+        "semantic": 176,
+        "search": 206,
+        "visualize": 189,
+        "recommend": 200
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 121.62192392349243,
+      "nodes": 8235,
+      "edges": 11341,
+      "operations": {
+        "batch_add": 4311,
+        "batch_edge": 10457,
+        "user_add": 3926,
+        "infer": 362,
+        "gnn_compute": 450,
+        "user_connect": 884,
+        "semantic": 324,
+        "search": 369,
+        "visualize": 347,
+        "recommend": 360
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 182.10621905326843,
+      "nodes": 9746,
+      "edges": 11654,
+      "operations": {
+        "batch_add": 4311,
+        "batch_edge": 10457,
+        "user_add": 5437,
+        "infer": 481,
+        "gnn_compute": 627,
+        "user_connect": 1197,
+        "semantic": 458,
+        "search": 500,
+        "visualize": 485,
+        "recommend": 486
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 243.02761268615723,
+      "nodes": 11263,
+      "edges": 11988,
+      "operations": {
+        "batch_add": 4311,
+        "batch_edge": 10457,
+        "user_add": 6954,
+        "infer": 616,
+        "gnn_compute": 796,
+        "user_connect": 1531,
+        "semantic": 582,
+        "search": 633,
+        "visualize": 637,
+        "recommend": 577
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 303.5545310974121,
+      "nodes": 12351,
+      "edges": 12205,
+      "operations": {
+        "batch_add": 4311,
+        "batch_edge": 10457,
+        "user_add": 8042,
+        "infer": 710,
+        "gnn_compute": 934,
+        "user_connect": 1748,
+        "semantic": 667,
+        "search": 738,
+        "visualize": 728,
+        "recommend": 683
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 363.6406979560852,
+      "nodes": 13512,
+      "edges": 12481,
+      "operations": {
+        "batch_add": 4311,
+        "batch_edge": 10457,
+        "user_add": 9203,
+        "infer": 805,
+        "gnn_compute": 1062,
+        "user_connect": 2024,
+        "semantic": 758,
+        "search": 846,
+        "visualize": 831,
+        "recommend": 773
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 423.7238383293152,
+      "nodes": 14534,
+      "edges": 12697,
+      "operations": {
+        "batch_add": 4311,
+        "batch_edge": 10457,
+        "user_add": 10225,
+        "infer": 890,
+        "gnn_compute": 1188,
+        "user_connect": 2240,
+        "semantic": 843,
+        "search": 952,
+        "visualize": 921,
+        "recommend": 846
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 484.31920051574707,
+      "nodes": 15538,
+      "edges": 12921,
+      "operations": {
+        "batch_add": 4311,
+        "batch_edge": 10457,
+        "user_add": 11229,
+        "infer": 972,
+        "gnn_compute": 1290,
+        "user_connect": 2464,
+        "semantic": 920,
+        "search": 1027,
+        "visualize": 993,
+        "recommend": 929
+      }
+    },
+    {
+      "phase": 2,
+      "elapsed": 544.3912923336029,
+      "nodes": 16346,
+      "edges": 13113,
+      "operations": {
+        "batch_add": 4311,
+        "batch_edge": 10457,
+        "user_add": 12037,
+        "infer": 1035,
+        "gnn_compute": 1390,
+        "user_connect": 2656,
+        "semantic": 993,
+        "search": 1117,
+        "visualize": 1055,
+        "recommend": 1009
+      }
+    }
+  ],
+  "issues": [],
+  "final_stats": {
+    "nodes": 17289,
+    "edges": 13320,
+    "embeddings_count": 17289,
+    "nodes_added": 17289,
+    "edges_added": 13320,
+    "queries": 2288,
+    "inferences": 1116,
+    "embeddings_computed": 15656430,
+    "recommendations": 1086,
+    "version": "7.0"
+  },
+  "operations": {
+    "batch_add": 4311,
+    "batch_edge": 10457,
+    "user_add": 12980,
+    "infer": 1116,
+    "gnn_compute": 1463,
+    "user_connect": 2863,
+    "semantic": 1080,
+    "search": 1208,
+    "visualize": 1131,
+    "recommend": 1086
+  }
+}

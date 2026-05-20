@@ -1,0 +1,51 @@
+{
+  "summary": {
+    "total_tests": 4,
+    "passed_tests": 4,
+    "total_issues": 0
+  },
+  "issues": [],
+  "results": [
+    {
+      "test_name": "真实知识库构建",
+      "passed": true,
+      "duration": 0.7701866626739502,
+      "performance": {
+        "node_rate": 2610.74654532202,
+        "edge_rate": 6526.86636330505,
+        "total_nodes": 2000,
+        "total_edges": 5000
+      }
+    },
+    {
+      "test_name": "高并发操作",
+      "passed": true,
+      "duration": 0.25194573402404785,
+      "performance": {
+        "throughput": 7938.863446871294,
+        "success_rate": 100.0,
+        "thread_count": 20
+      }
+    },
+    {
+      "test_name": "查询性能与可扩展性",
+      "passed": true,
+      "duration": 0.02288651466369629,
+      "performance": {
+        "qps": 483381.8139910107,
+        "infer_rate": 2404.549623922216
+      }
+    },
+    {
+      "test_name": "内存稳定性",
+      "passed": true,
+      "duration": 0.07572078704833984,
+      "performance": {
+        "initial_memory": 0.0,
+        "final_memory": 0.0,
+        "growth": 0.0
+      }
+    }
+  ],
+  "memory_history": []
+}

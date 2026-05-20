@@ -1,0 +1,67 @@
+{
+  "summary": {
+    "total_bugs": 0,
+    "total_warnings": 0,
+    "performance_issues": 0,
+    "bugs": [],
+    "warnings": [],
+    "performance": []
+  },
+  "test_results": {
+    "large_scale": {
+      "passed": true,
+      "nodes_added": 1000,
+      "edges_added": 2000,
+      "node_rate": 56621.631837572226,
+      "edge_rate": 223178.439354032,
+      "elapsed": 0.03659987449645996
+    },
+    "concurrent": {
+      "passed": true,
+      "throughput": 623.456262347077,
+      "errors": 0,
+      "elapsed": 16.03961753845215
+    },
+    "edge_cases": {
+      "passed": true,
+      "test_cases": [
+        {
+          "case": "empty_string",
+          "result": "ok"
+        },
+        {
+          "case": "long_string",
+          "result": "ok"
+        },
+        {
+          "case": "big_properties",
+          "result": "ok"
+        },
+        {
+          "case": "duplicate_connections",
+          "result": "ok"
+        }
+      ]
+    },
+    "memory": {
+      "passed": true,
+      "memory_growth": 0.0,
+      "initial_memory": 0.0,
+      "final_memory": 0.0
+    },
+    "long_running": {
+      "passed": true,
+      "total_operations": 11558,
+      "error_count": 0,
+      "throughput": 385.2517010504823,
+      "elapsed": 30.00116539001465,
+      "final_nodes": 1756,
+      "final_edges": 1941
+    },
+    "gnn": {
+      "passed": true,
+      "embeddings_count": 8
+    }
+  },
+  "timestamp": "2026-05-18T11:28:36.421270"
+}

@@ -1,0 +1,166 @@
+[14:50:35] Preparing initial data...
+[14:50:35] Created 1000 initial nodes
+[14:50:35] Created 500 initial edges
+[14:50:35] Starting 20 worker threads...
+[14:50:35] Starting monitoring thread...
+[14:50:35] Starting 1.0 hour stress test...
+[14:50:35] Press Ctrl+C to stop early
+
+[14:51:05] Progress: 00:00:30 / 00:59:00 | Ops: 4,770 | Rate: 158 ops/s
+[14:51:35] Progress: 00:01:00 / 00:58:00 | Ops: 7,604 | Rate: 126 ops/s
+[14:51:35] Checkpoint @ 00:01:00 | Nodes: 3,200 | Edges: 5,058 | Ops: 7,624 (126 ops/s)
+[14:52:05] Progress: 00:01:30 / 00:58:00 | Ops: 9,992 | Rate: 110 ops/s
+[14:52:36] Progress: 00:02:00 / 00:57:00 | Ops: 0 | Rate: 0 ops/s
+[14:52:36] Checkpoint @ 00:02:01 | Nodes: 4,421 | Edges: 7,464 | Ops: 0 (0 ops/s)
+[14:53:35] Progress: 00:03:00 / 00:56:00 | Ops: 0 | Rate: 0 ops/s
+[14:53:37] Checkpoint @ 00:03:01 | Nodes: 5,363 | Edges: 9,386 | Ops: 0 (0 ops/s)
+[14:54:05] Progress: 00:03:30 / 00:56:00 | Ops: 0 | Rate: 0 ops/s
+[14:54:35] Progress: 00:04:00 / 00:55:00 | Ops: 0 | Rate: 0 ops/s
+[14:54:38] Checkpoint @ 00:04:02 | Nodes: 6,247 | Edges: 11,049 | Ops: 0 (0 ops/s)
+[14:55:06] Progress: 00:04:30 / 00:55:00 | Ops: 0 | Rate: 0 ops/s
+[14:55:36] Progress: 00:05:00 / 00:54:00 | Ops: 0 | Rate: 0 ops/s
+[14:55:38] Checkpoint @ 00:05:03 | Nodes: 6,973 | Edges: 12,507 | Ops: 0 (0 ops/s)
+[14:56:35] Progress: 00:06:00 / 00:53:00 | Ops: 0 | Rate: 0 ops/s
+[14:56:39] Checkpoint @ 00:06:03 | Nodes: 7,646 | Edges: 13,818 | Ops: 0 (0 ops/s)
+[14:57:05] Progress: 00:06:30 / 00:53:00 | Ops: 0 | Rate: 0 ops/s
+[14:57:36] Progress: 00:07:00 / 00:52:00 | Ops: 0 | Rate: 0 ops/s
+[14:57:40] Checkpoint @ 00:07:04 | Nodes: 8,253 | Edges: 15,033 | Ops: 0 (0 ops/s)
+[14:58:35] Progress: 00:08:00 / 00:51:00 | Ops: 0 | Rate: 0 ops/s
+[14:58:41] Checkpoint @ 00:08:05 | Nodes: 8,896 | Edges: 16,268 | Ops: 0 (0 ops/s)
+[14:59:05] Progress: 00:08:30 / 00:51:00 | Ops: 0 | Rate: 0 ops/s
+[14:59:35] Progress: 00:09:00 / 00:50:00 | Ops: 0 | Rate: 0 ops/s
+[14:59:41] Checkpoint @ 00:09:06 | Nodes: 9,385 | Edges: 17,316 | Ops: 0 (0 ops/s)
+[15:00:06] Progress: 00:09:30 / 00:50:00 | Ops: 0 | Rate: 0 ops/s
+[15:00:36] Progress: 00:10:00 / 00:49:00 | Ops: 0 | Rate: 0 ops/s
+[15:00:42] Checkpoint @ 00:10:07 | Nodes: 9,881 | Edges: 18,337 | Ops: 0 (0 ops/s)
+[15:01:35] Progress: 00:11:00 / 00:48:00 | Ops: 0 | Rate: 0 ops/s
+[15:01:43] Checkpoint @ 00:11:08 | Nodes: 10,363 | Edges: 19,215 | Ops: 0 (0 ops/s)
+[15:02:05] Progress: 00:11:30 / 00:48:00 | Ops: 0 | Rate: 0 ops/s
+[15:02:36] Progress: 00:12:00 / 00:47:00 | Ops: 0 | Rate: 0 ops/s
+[15:02:44] Checkpoint @ 00:12:08 | Nodes: 10,792 | Edges: 20,140 | Ops: 0 (0 ops/s)
+[15:03:06] Progress: 00:12:30 / 00:47:00 | Ops: 0 | Rate: 0 ops/s
+[15:03:45] Checkpoint @ 00:13:09 | Nodes: 11,200 | Edges: 21,046 | Ops: 0 (0 ops/s)
+[15:04:05] Progress: 00:13:30 / 00:46:00 | Ops: 0 | Rate: 0 ops/s
+[15:04:35] Progress: 00:14:00 / 00:45:00 | Ops: 0 | Rate: 0 ops/s
+[15:04:46] Checkpoint @ 00:14:10 | Nodes: 11,651 | Edges: 21,946 | Ops: 0 (0 ops/s)
+[15:05:05] Progress: 00:14:30 / 00:45:00 | Ops: 0 | Rate: 0 ops/s
+[15:05:36] Progress: 00:15:00 / 00:44:00 | Ops: 0 | Rate: 0 ops/s
+[15:05:46] Checkpoint @ 00:15:10 | Nodes: 12,072 | Edges: 22,729 | Ops: 0 (0 ops/s)
+[15:06:35] Progress: 00:16:00 / 00:43:00 | Ops: 0 | Rate: 0 ops/s
+[15:06:46] Checkpoint @ 00:16:10 | Nodes: 12,475 | Edges: 23,461 | Ops: 0 (0 ops/s)
+[15:07:05] Progress: 00:16:30 / 00:43:00 | Ops: 0 | Rate: 0 ops/s
+[15:07:35] Progress: 00:17:00 / 00:42:00 | Ops: 0 | Rate: 0 ops/s
+[15:07:46] Checkpoint @ 00:17:10 | Nodes: 12,863 | Edges: 24,230 | Ops: 0 (0 ops/s)
+[15:08:06] Progress: 00:17:30 / 00:42:00 | Ops: 0 | Rate: 0 ops/s
+[15:08:46] Checkpoint @ 00:18:11 | Nodes: 13,264 | Edges: 24,951 | Ops: 0 (0 ops/s)
+[15:09:05] Progress: 00:18:30 / 00:41:00 | Ops: 0 | Rate: 0 ops/s
+[15:09:35] Progress: 00:19:00 / 00:40:00 | Ops: 0 | Rate: 0 ops/s
+[15:09:47] Checkpoint @ 00:19:12 | Nodes: 13,603 | Edges: 25,653 | Ops: 0 (0 ops/s)
+[15:10:05] Progress: 00:19:30 / 00:40:00 | Ops: 0 | Rate: 0 ops/s
+[15:10:36] Progress: 00:20:00 / 00:39:00 | Ops: 0 | Rate: 0 ops/s
+[15:10:48] Checkpoint @ 00:20:12 | Nodes: 14,069 | Edges: 26,484 | Ops: 0 (0 ops/s)
+[15:11:35] Progress: 00:21:00 / 00:38:00 | Ops: 0 | Rate: 0 ops/s
+[15:11:48] Checkpoint @ 00:21:12 | Nodes: 14,479 | Edges: 27,233 | Ops: 0 (0 ops/s)
+[15:12:05] Progress: 00:21:30 / 00:38:00 | Ops: 0 | Rate: 0 ops/s
+[15:12:35] Progress: 00:22:00 / 00:37:00 | Ops: 0 | Rate: 0 ops/s
+[15:12:48] Checkpoint @ 00:22:13 | Nodes: 14,873 | Edges: 27,982 | Ops: 0 (0 ops/s)
+[15:13:06] Progress: 00:22:30 / 00:37:00 | Ops: 0 | Rate: 0 ops/s
+[15:13:48] Checkpoint @ 00:23:13 | Nodes: 15,216 | Edges: 28,636 | Ops: 0 (0 ops/s)
+[15:14:05] Progress: 00:23:30 / 00:36:00 | Ops: 0 | Rate: 0 ops/s
+[15:14:35] Progress: 00:24:00 / 00:35:00 | Ops: 0 | Rate: 0 ops/s
+[15:14:48] Checkpoint @ 00:24:13 | Nodes: 15,570 | Edges: 29,363 | Ops: 0 (0 ops/s)
+[15:15:05] Progress: 00:24:30 / 00:35:00 | Ops: 0 | Rate: 0 ops/s
+[15:15:36] Progress: 00:25:00 / 00:34:00 | Ops: 0 | Rate: 0 ops/s
+[15:15:49] Checkpoint @ 00:25:13 | Nodes: 15,848 | Edges: 29,929 | Ops: 0 (0 ops/s)
+[15:16:35] Progress: 00:26:00 / 00:33:00 | Ops: 0 | Rate: 0 ops/s
+[15:16:50] Checkpoint @ 00:26:14 | Nodes: 16,195 | Edges: 30,531 | Ops: 0 (0 ops/s)
+[15:17:05] Progress: 00:26:30 / 00:33:00 | Ops: 0 | Rate: 0 ops/s
+[15:17:35] Progress: 00:27:00 / 00:32:00 | Ops: 0 | Rate: 0 ops/s
+[15:17:50] Checkpoint @ 00:27:15 | Nodes: 16,521 | Edges: 31,221 | Ops: 0 (0 ops/s)
+[15:18:06] Progress: 00:27:30 / 00:32:00 | Ops: 0 | Rate: 0 ops/s
+[15:18:51] Checkpoint @ 00:28:16 | Nodes: 16,810 | Edges: 31,787 | Ops: 0 (0 ops/s)
+[15:19:05] Progress: 00:28:30 / 00:31:00 | Ops: 0 | Rate: 0 ops/s
+[15:19:35] Progress: 00:29:00 / 00:30:00 | Ops: 0 | Rate: 0 ops/s
+[15:19:52] Checkpoint @ 00:29:16 | Nodes: 17,118 | Edges: 32,378 | Ops: 0 (0 ops/s)
+[15:20:05] Progress: 00:29:30 / 00:30:00 | Ops: 0 | Rate: 0 ops/s
+[15:20:36] Progress: 00:30:00 / 00:29:00 | Ops: 0 | Rate: 0 ops/s
+[15:20:53] Checkpoint @ 00:30:17 | Nodes: 17,400 | Edges: 32,921 | Ops: 0 (0 ops/s)
+[15:21:35] Progress: 00:31:00 / 00:28:00 | Ops: 0 | Rate: 0 ops/s
+[15:21:53] Checkpoint @ 00:31:17 | Nodes: 17,694 | Edges: 33,498 | Ops: 0 (0 ops/s)
+[15:22:05] Progress: 00:31:30 / 00:28:00 | Ops: 0 | Rate: 0 ops/s
+[15:22:35] Progress: 00:32:00 / 00:27:00 | Ops: 0 | Rate: 0 ops/s
+[15:22:54] Checkpoint @ 00:32:18 | Nodes: 17,964 | Edges: 34,025 | Ops: 0 (0 ops/s)
+[15:23:06] Progress: 00:32:30 / 00:27:00 | Ops: 0 | Rate: 0 ops/s
+[15:23:55] Checkpoint @ 00:33:19 | Nodes: 18,227 | Edges: 34,525 | Ops: 0 (0 ops/s)
+[15:24:05] Progress: 00:33:30 / 00:26:00 | Ops: 0 | Rate: 0 ops/s
+[15:24:35] Progress: 00:34:00 / 00:25:00 | Ops: 0 | Rate: 0 ops/s
+[15:24:55] Checkpoint @ 00:34:19 | Nodes: 18,478 | Edges: 35,018 | Ops: 0 (0 ops/s)
+[15:25:05] Progress: 00:34:30 / 00:25:00 | Ops: 0 | Rate: 0 ops/s
+[15:25:36] Progress: 00:35:00 / 00:24:00 | Ops: 0 | Rate: 0 ops/s
+[15:25:54] Checkpoint @ 00:35:19 | Nodes: 18,730 | Edges: 35,503 | Ops: 0 (0 ops/s)
+[15:26:35] Progress: 00:36:00 / 00:23:00 | Ops: 0 | Rate: 0 ops/s
+[15:26:55] Checkpoint @ 00:36:19 | Nodes: 19,003 | Edges: 35,978 | Ops: 0 (0 ops/s)
+[15:27:05] Progress: 00:36:30 / 00:23:00 | Ops: 0 | Rate: 0 ops/s
+[15:27:35] Progress: 00:37:00 / 00:22:00 | Ops: 0 | Rate: 0 ops/s
+[15:27:55] Checkpoint @ 00:37:19 | Nodes: 19,208 | Edges: 36,430 | Ops: 0 (0 ops/s)
+[15:28:06] Progress: 00:37:30 / 00:22:00 | Ops: 0 | Rate: 0 ops/s
+[15:28:56] Checkpoint @ 00:38:20 | Nodes: 19,428 | Edges: 36,870 | Ops: 0 (0 ops/s)
+[15:29:05] Progress: 00:38:30 / 00:21:00 | Ops: 0 | Rate: 0 ops/s
+[15:29:35] Progress: 00:39:00 / 00:20:00 | Ops: 0 | Rate: 0 ops/s
+[15:29:56] Checkpoint @ 00:39:20 | Nodes: 19,671 | Edges: 37,381 | Ops: 0 (0 ops/s)
+[15:30:06] Progress: 00:39:30 / 00:20:00 | Ops: 0 | Rate: 0 ops/s
+[15:30:57] Checkpoint @ 00:40:21 | Nodes: 19,870 | Edges: 37,839 | Ops: 0 (0 ops/s)
+[15:31:05] Progress: 00:40:30 / 00:19:00 | Ops: 0 | Rate: 0 ops/s
+[15:31:35] Progress: 00:41:00 / 00:18:00 | Ops: 0 | Rate: 0 ops/s
+[15:31:57] Checkpoint @ 00:41:21 | Nodes: 20,097 | Edges: 38,253 | Ops: 0 (0 ops/s)
+[15:32:05] Progress: 00:41:30 / 00:18:00 | Ops: 0 | Rate: 0 ops/s
+[15:32:36] Progress: 00:42:00 / 00:17:00 | Ops: 0 | Rate: 0 ops/s
+[15:32:58] Checkpoint @ 00:42:22 | Nodes: 20,312 | Edges: 38,773 | Ops: 0 (0 ops/s)
+[15:33:35] Progress: 00:43:00 / 00:16:00 | Ops: 0 | Rate: 0 ops/s
+[15:33:58] Checkpoint @ 00:43:22 | Nodes: 20,519 | Edges: 39,177 | Ops: 0 (0 ops/s)
+[15:34:05] Progress: 00:43:30 / 00:16:00 | Ops: 0 | Rate: 0 ops/s
+[15:34:35] Progress: 00:44:00 / 00:15:00 | Ops: 0 | Rate: 0 ops/s
+[15:34:59] Checkpoint @ 00:44:23 | Nodes: 20,705 | Edges: 39,584 | Ops: 0 (0 ops/s)
+[15:35:06] Progress: 00:44:30 / 00:15:00 | Ops: 0 | Rate: 0 ops/s
+[15:35:59] Checkpoint @ 00:45:23 | Nodes: 20,945 | Edges: 40,042 | Ops: 0 (0 ops/s)
+[15:36:05] Progress: 00:45:30 / 00:14:00 | Ops: 0 | Rate: 0 ops/s
+[15:36:35] Progress: 00:46:00 / 00:13:00 | Ops: 0 | Rate: 0 ops/s
+[15:36:59] Checkpoint @ 00:46:23 | Nodes: 21,179 | Edges: 40,498 | Ops: 0 (0 ops/s)
+[15:37:05] Progress: 00:46:30 / 00:13:00 | Ops: 0 | Rate: 0 ops/s
+[15:37:36] Progress: 00:47:00 / 00:12:00 | Ops: 0 | Rate: 0 ops/s
+[15:38:00] Checkpoint @ 00:47:24 | Nodes: 21,418 | Edges: 40,988 | Ops: 0 (0 ops/s)
+[15:38:35] Progress: 00:48:00 / 00:11:00 | Ops: 0 | Rate: 0 ops/s
+[15:39:01] Checkpoint @ 00:48:24 | Nodes: 21,662 | Edges: 41,508 | Ops: 0 (0 ops/s)
+[15:39:05] Progress: 00:48:30 / 00:11:00 | Ops: 0 | Rate: 0 ops/s
+[15:39:35] Progress: 00:49:00 / 00:10:00 | Ops: 0 | Rate: 0 ops/s
+[15:40:01] Checkpoint @ 00:49:25 | Nodes: 21,961 | Edges: 41,996 | Ops: 0 (0 ops/s)
+[15:40:06] Progress: 00:49:30 / 00:10:00 | Ops: 0 | Rate: 0 ops/s
+[15:41:01] Checkpoint @ 00:50:25 | Nodes: 22,179 | Edges: 42,435 | Ops: 0 (0 ops/s)
+[15:41:05] Progress: 00:50:30 / 00:09:00 | Ops: 0 | Rate: 0 ops/s
+[15:41:35] Progress: 00:51:00 / 00:08:00 | Ops: 0 | Rate: 0 ops/s
+[15:42:02] Checkpoint @ 00:51:26 | Nodes: 22,373 | Edges: 42,906 | Ops: 0 (0 ops/s)
+[15:42:05] Progress: 00:51:30 / 00:08:00 | Ops: 0 | Rate: 0 ops/s
+[15:42:36] Progress: 00:52:00 / 00:07:00 | Ops: 0 | Rate: 0 ops/s
+[15:43:02] Checkpoint @ 00:52:26 | Nodes: 22,608 | Edges: 43,359 | Ops: 0 (0 ops/s)
+[15:43:06] Progress: 00:52:30 / 00:07:00 | Ops: 0 | Rate: 0 ops/s
+[15:44:02] Checkpoint @ 00:53:26 | Nodes: 22,800 | Edges: 43,791 | Ops: 0 (0 ops/s)
+[15:44:05] Progress: 00:53:30 / 00:06:00 | Ops: 0 | Rate: 0 ops/s
+[15:44:35] Progress: 00:54:00 / 00:05:00 | Ops: 0 | Rate: 0 ops/s
+[15:45:03] Checkpoint @ 00:54:27 | Nodes: 23,027 | Edges: 44,226 | Ops: 0 (0 ops/s)
+[15:45:06] Progress: 00:54:30 / 00:05:00 | Ops: 0 | Rate: 0 ops/s
+[15:46:04] Checkpoint @ 00:55:27 | Nodes: 23,266 | Edges: 44,678 | Ops: 0 (0 ops/s)
+[15:46:05] Progress: 00:55:30 / 00:04:00 | Ops: 0 | Rate: 0 ops/s
+[15:46:35] Progress: 00:56:00 / 00:03:00 | Ops: 0 | Rate: 0 ops/s
+[15:47:04] Checkpoint @ 00:56:28 | Nodes: 23,485 | Edges: 45,099 | Ops: 0 (0 ops/s)
+[15:47:05] Progress: 00:56:30 / 00:03:00 | Ops: 0 | Rate: 0 ops/s
+[15:47:36] Progress: 00:57:00 / 00:02:00 | Ops: 0 | Rate: 0 ops/s
+[15:48:05] Checkpoint @ 00:57:29 | Nodes: 23,698 | Edges: 45,483 | Ops: 0 (0 ops/s)
+[15:48:35] Progress: 00:58:00 / 00:01:00 | Ops: 0 | Rate: 0 ops/s
+[15:49:05] Progress: 00:58:30 / 00:01:00 | Ops: 0 | Rate: 0 ops/s
+[15:49:05] Checkpoint @ 00:58:29 | Nodes: 23,871 | Edges: 45,857 | Ops: 0 (0 ops/s)
+[15:49:35] Progress: 00:59:00 / 00:00:00 | Ops: 0 | Rate: 0 ops/s
+[15:50:06] Progress: 00:59:30 / 00:00:00 | Ops: 0 | Rate: 0 ops/s
+[15:50:06] Checkpoint @ 00:59:30 | Nodes: 24,082 | Edges: 46,227 | Ops: 0 (0 ops/s)
+[15:50:35] Target duration reached: 3600 seconds
+[15:50:35] Stopping all threads...
+[15:50:35] Collecting final statistics...

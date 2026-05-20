@@ -1,0 +1,24 @@
+{
+  "start_time": "2026-05-18T14:50:35.234480",
+  "end_time": "2026-05-18T15:50:35.988314",
+  "duration": 3600.752991437912,
+  "target_duration": 3600,
+  "operations": {
+    "total": 0,
+    "success": 0,
+    "failure": 0
+  },
+  "final_stats": {
+    "nodes": 24173,
+    "edges": 46413,
+    "embeddings_count": 24173,
+    "nodes_added": 24173,
+    "edges_added": 46413,
+    "queries": 68760,
+    "inferences": 23157,
+    "embeddings_computed": 24173,
+    "recommendations": 23234,
+    "version": "7.0"
+  },
+  "success": true
+}

@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-05-19T11:29:15.964210",
+  "total_time": 2165.4063987731934,
+  "passed": 4,
+  "total": 5,
+  "results": [
+    {
+      "name": "\u57fa\u672c\u6027\u80fd\u6d4b\u8bd5",
+      "passed": true
+    },
+    {
+      "name": "\u4e2d\u7b49\u5e76\u53d1\u6d4b\u8bd5",
+      "passed": true
+    },
+    {
+      "name": "\u6781\u7aef\u8fb9\u7f18\u60c5\u51b5",
+      "passed": true
+    },
+    {
+      "name": "\u5185\u5b58\u6cc4\u6f0f\u6d4b\u8bd5",
+      "passed": false
+    },
+    {
+      "name": "\u6301\u4e45\u5316\u6d4b\u8bd5",
+      "passed": true
+    }
+  ]
+}
