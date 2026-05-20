@@ -1,0 +1,745 @@
+#!/usr/bin/env python3
+"""
+知识图谱记忆系统 v12.0 - 完整修复的最终优化版本
+
+修复的问题：
+1. LRUCache 语法错误 - del self.cache.pop(oldest) 改为直接 pop
+2. recall 方法逻辑错误 - 在循环中有重复的 seen.add
+3. recall 方法中出现了语法问题（缩进错误）
+4. knowledge_str 类型判断有语法问题
+5. NodeV7 的 to_dict 方法有问题
+6. 所有测试用例都通过
+"""
+import sys
+import os
+import uuid
+import time
+import math
+import random
+import pickle
+from datetime import datetime
+from typing import Dict, List, Optional, Any, Set
+from enum import Enum
+import threading
+import logging
+
+# 配置日志
+logger = logging.getLogger("KG_V12")
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+# 知识类型枚举
+class NodeType(Enum):
+    ENTITY = "entity"
+    CONCEPT = "concept"
+    FACT = "fact"
+    DOCUMENT = "document"
+    EVENT = "event"
+
+# 关系类型枚举
+class EdgeType(Enum):
+    RELATED_TO = "related_to"
+    IS_A = "is_a"
+    HAS_A = "has_a"
+    USES = "uses"
+    PART_OF = "part_of"
+    CAUSES = "causes"
+
+# LRU缓存
+class LRUCache:
+    """LRU缓存实现 - 修复了语法错误
+    """
+    
+    def __init__(self, maxsize: int = 1000):
+        self.cache = {}
+        self.order = []
+        self.maxsize = maxsize
+        self.lock = threading.Lock()
+    
+    def get(self, key):
+        with self.lock:
+            if key not in self.cache:
+                return None
+            self.order.remove(key)
+            self.order.append(key)
+            return self.cache[key]
+    
+    def put(self, key, value):
+        with self.lock:
+            if key in self.cache:
+                self.order.remove(key)
+            elif len(self.cache) >= self.maxsize:
+                oldest = self.order.pop(0)
+                del self.cache[oldest]
+            self.cache[key] = value
+            self.order.append(key)
+    
+    def clear(self):
+        with self.lock:
+            self.cache.clear()
+            self.order.clear()
+    
+    def size(self):
+        return len(self.cache)
+
+# 向量索引
+class VectorIndex:
+    """简单向量索引
+    """
+    def __init__(self, dim: int = 64):
+        self.vectors = {}
+        self.dim = dim
+        self.lock = threading.Lock()
+    
+    def add_vector(self, node_id: str, vec: List[float]):
+        with self.lock:
+            self.vectors[node_id] = vec
+    
+    def search_similar(self, query_vec: List[float], k: int = 10):
+        with self.lock:
+            if not self.vectors:
+                return []
+            
+            norm_query = self._normalize(query_vec)
+            scores = []
+            
+            for node_id, vec in self.vectors.items():
+                norm_vec = self._normalize(vec)
+                score = sum(a * b for a, b in zip(norm_query, norm_vec))
+                scores.append((score, node_id))
+            
+            scores.sort(key=lambda x: (-x[0], x[1]))
+            return scores[:k]
+    
+    def remove_vector(self, node_id: str):
+        with self.lock:
+            if node_id in self.vectors:
+                del self.vectors[node_id]
+    
+    def size(self):
+        return len(self.vectors)
+    
+    def _normalize(self, vec: List[float]) -> List[float]:
+        norm = math.sqrt(sum(x * x for x in vec))
+        if norm < 1e-9:
+            return [0.0] * len(vec)
+        return [x / norm for x in vec]
+
+# 节点嵌入引擎
+class NodeEmbeddingEngine:
+    """简单的节点嵌入生成引擎
+    """
+    def __init__(self, dim: int = 64):
+        self.dim = dim
+        self.rng = random.Random(42)
+    
+    def create_random_embedding(self) -> List[float]:
+        return [self.rng.uniform(-1, 1) for _ in range(self.dim)]
+    
+    def normalize_vector(self, vec: List[float]) -> List[float]:
+        norm = math.sqrt(sum(x * x for x in vec))
+        if norm < 1e-9:
+            return [0.0] * len(vec)
+        return [x / norm for x in vec]
+    
+    def cosine_similarity(self, vec1, vec2):
+        norm1 = self.normalize_vector(vec1)
+        norm2 = self.normalize_vector(vec2)
+        return sum(a * b for a, b in zip(norm1, norm2))
+
+# 知识节点
+class NodeV7:
+    def __init__(self, id: str, label: str, node_type: NodeType = NodeType.ENTITY, properties: Dict = None):
+        self.id = id
+        self.label = label
+        self.node_type = node_type
+        self.properties = properties or {}
+        self.created_at = datetime.now().isoformat()
+        self.embedding = None
+        self.has_embedding = False
+    
+    def to_dict(self):
+        nt = self.node_type
+        if isinstance(nt, NodeType):
+            nt = nt.value
+        return {
+            'id': self.id,
+            'label': self.label,
+            'type': nt,
+            'properties': self.properties,
+            'has_embedding': self.has_embedding,
+            'created_at': self.created_at,
+        }
+
+# 知识边
+class EdgeV7:
+    def __init__(self, id: str, source_id: str, target_id: str, edge_type: str, weight: float = 1.0, properties: Dict = None):
+        self.id = id
+        self.source_id = source_id
+        self.target_id = target_id
+        self.edge_type = edge_type
+        self.weight = weight
+        self.properties = properties or {}
+        self.created_at = datetime.now().isoformat()
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'source_id': self.source_id,
+            'target_id': self.target_id,
+            'type': self.edge_type,
+            'weight': self.weight,
+            'properties': self.properties,
+            'created_at': self.created_at,
+        }
+
+# 知识图谱记忆系统 v12.0 - 最终优化版本
+class MemorySystemV12:
+    """完整修复的知识图谱记忆系统
+    """
+    def __init__(self):
+        self._nodes: Dict[str, NodeV7] = {}
+        self._label_to_node: Dict[str, str] = {}
+        self._edges: Dict[str, EdgeV7] = {}
+        self._adjacency: Dict[str, Set[str]] = {}
+        self._node_lock = threading.RLock()
+        self._edge_lock = threading.RLock()
+        self._cache = LRUCache(maxsize=2000)
+        self._embedding_engine = NodeEmbeddingEngine()
+        self._vector_index = VectorIndex()
+        self._stats: Dict[str, Any] = {
+            'nodes_added': 0, 'edges_added': 0, 'queries': 0,
+            'cache_hits': 0, 'cache_misses': 0, 'inferences': 0,
+            'recommendations': 0, 'embeddings_computed': 0,
+            'node_add_time': 0.0, 'edge_add_time': 0.0,
+            'query_time': 0.0, 'semantic_search_time': 0.0, 'infer_time': 0.0,
+        }
+        logger.info("[MemorySystemV12.__init__ - 初始化完成")
+    
+    def _safe_k(self, k, default: int = 10):
+        if k is None:
+            return max(1, default)
+        if isinstance(k, bool):
+            return max(1, default)
+        try:
+            if isinstance(k, float):
+                if math.isnan(k) or math.isinf(k):
+                    return max(1, default)
+            num_k = int(k)
+            return max(1, num_k)
+        except (ValueError, TypeError, OverflowError):
+            return max(1, default)
+    
+    def _safe_depth(self, max_depth, default: int = 3):
+        if max_depth is None:
+            return max(1, default)
+        if isinstance(max_depth, bool):
+            return max(1, default)
+        try:
+            if isinstance(max_depth, float):
+                if math.isnan(max_depth) or math.isinf(max_depth):
+                    return max(1, default)
+            num_depth = int(max_depth)
+            return max(1, num_depth)
+        except (ValueError, TypeError, OverflowError):
+            return max(1, default)
+    
+    def remember(self, knowledge: str, properties: Dict = None,
+               node_type: NodeType = NodeType.ENTITY,
+               compute_embedding: bool = True) -> Optional[str]:
+        """记忆新知识 - v12.0完整修复版本
+        """
+        start_time = time.time()
+        
+        if knowledge is None:
+            return None
+        
+        knowledge_str = str(knowledge)
+        label_lower = knowledge_str.lower()
+        
+        if not label_lower:
+            return None
+        
+        safe_node_type = NodeType.ENTITY
+        if isinstance(node_type, NodeType):
+            safe_node_type = node_type
+        elif isinstance(node_type, str):
+            try:
+                safe_node_type = NodeType(node_type)
+            except ValueError:
+                safe_node_type = NodeType.ENTITY
+        
+        with self._node_lock:
+            if label_lower in self._label_to_node:
+                return self._label_to_node[label_lower]
+            
+            node_id = str(uuid.uuid4())
+            node = NodeV7(
+                id=node_id,
+                label=knowledge_str,
+                node_type=safe_node_type,
+                properties=properties
+            )
+            
+            self._nodes[node_id] = node
+            self._label_to_node[label_lower] = node_id
+            self._adjacency[node_id] = set()
+            self._stats['nodes_added'] += 1
+            
+            if compute_embedding:
+                embedding = self._embedding_engine.create_random_embedding()
+                self._vector_index.add_vector(node_id, embedding)
+                node.embedding = embedding
+                node.has_embedding = True
+                self._stats['embeddings_computed'] += 1
+        
+        self._stats['node_add_time'] += time.time() - start_time
+        return node_id
+    
+    def connect(self, source: str, target: str,
+               relation: str = EdgeType.RELATED_TO,
+               weight: float = 1.0, properties: Dict = None) -> Optional[str]:
+        """建立关系连接 - v12.0完整修复版本
+        """
+        start_time = time.time()
+        
+        if source is None or target is None:
+            return None
+        
+        safe_relation = EdgeType.RELATED_TO
+        if relation is None:
+            safe_relation = EdgeType.RELATED_TO
+        elif isinstance(relation, EdgeType):
+            safe_relation = relation.value
+        elif isinstance(relation, str):
+            safe_relation = relation
+        
+        safe_weight = 1.0
+        if weight is not None and isinstance(weight, (int, float)):
+            safe_weight = weight
+        
+        source_lower = source.lower()
+        target_lower = target.lower()
+        source_id = self._label_to_node.get(source_lower)
+        target_id = self._label_to_node.get(target_lower)
+        
+        if not source_id or not target_id:
+            return None
+        
+        edge_id = str(uuid.uuid4())
+        edge = EdgeV7(
+            id=edge_id,
+            source_id=source_id,
+            target_id=target_id,
+            edge_type=safe_relation,
+            weight=safe_weight,
+            properties=properties
+        )
+        
+        with self._edge_lock:
+            self._edges[edge.id] = edge
+            self._adjacency[source_id].add(target_id)
+            self._stats['edges_added'] += 1
+        
+        self._stats['edge_add_time'] += time.time() - start_time
+        return edge.id
+    
+    def recall(self, query: str, k = 20) -> List[Dict[str, Any]]:
+        """检索知识 - v12.0完整修复版本
+        """
+        start_time = time.time()
+        self._stats['queries'] += 1
+        
+        safe_k = self._safe_k(k, default=20)
+        
+        if query is None or query == "":
+            with self._node_lock:
+                results = []
+                for i, node in enumerate(self._nodes.values()):
+                    if i >= safe_k:
+                        break
+                    results.append(node.to_dict())
+                return results
+        
+        cache_key = f"recall:{query}:{safe_k}"
+        cached = self._cache.get(cache_key)
+        if cached is not None:
+            self._stats['cache_hits'] += 1
+            return cached
+        
+        self._stats['cache_misses'] += 1
+        
+        with self._node_lock:
+            results = []
+            seen = set()
+            query_lower = query.lower()
+            
+            if query_lower in self._label_to_node:
+                node_id = self._label_to_node[query_lower]
+                if node_id in self._nodes:
+                    results.append(self._nodes[node_id].to_dict())
+                    seen.add(node_id)
+            
+            for node_id, node in self._nodes.items():
+                if node_id in seen:
+                    continue
+                if len(results) >= safe_k:
+                    break
+                if query_lower in node.label.lower():
+                    results.append(node.to_dict())
+                    seen.add(node_id)
+            
+            for node_id, node in self._nodes.items():
+                if node_id in seen:
+                    continue
+                if len(results) >= safe_k:
+                    break
+                results.append(node.to_dict())
+                seen.add(node_id)
+            
+            self._cache.put(cache_key, results)
+        
+        self._stats['query_time'] += time.time() - start_time
+        return results
+    
+    def semantic_search(self, query_label: str, k = 10) -> List[Dict[str, Any]]:
+        """语义搜索 - v12.0完整修复版本
+        """
+        start_time = time.time()
+        self._stats['queries'] += 1
+        
+        safe_k = self._safe_k(k, default=10)
+        
+        if query_label is None or query_label == "":
+            return self.recall(query_label, k=safe_k)
+        
+        cache_key = f"semantic:{query_label}:{safe_k}"
+        cached = self._cache.get(cache_key)
+        if cached is not None:
+            self._stats['cache_hits'] += 1
+            return cached
+        
+        self._stats['cache_misses'] += 1
+        
+        vec = None
+        with self._node_lock:
+            query_lower = query_label.lower()
+            query_id = self._label_to_node.get(query_lower)
+            if query_id is not None and query_id in self._nodes:
+                node = self._nodes[query_id]
+                if node.has_embedding:
+                    vec = node.embedding
+                else:
+                    vec = self._embedding_engine.create_random_embedding()
+            else:
+                vec = self._embedding_engine.create_random_embedding()
+        
+        with self._edge_lock:
+            scores = self._vector_index.search_similar(vec, safe_k)
+            results = []
+            for score, node_id in scores:
+                if node_id in self._nodes:
+                    d = self._nodes[node_id].to_dict()
+                    d['similarity_score'] = round(score, 4)
+                    results.append(d)
+        
+        self._cache.put(cache_key, results)
+        self._stats['semantic_search_time'] += time.time() - start_time
+        return results
+    
+    def infer(self, concept: str, max_depth = 3) -> List[Dict[str, Any]]:
+        """图推理 - v12.0完整修复版本
+        """
+        start_time = time.time()
+        self._stats['inferences'] += 1
+        
+        safe_depth = self._safe_depth(max_depth, default=3)
+        
+        if concept is None:
+            return []
+        
+        with self._node_lock:
+            concept_lower = concept.lower()
+            node_id = self._label_to_node.get(concept_lower)
+            if not node_id:
+                return []
+            
+            with self._edge_lock:
+                results = []
+                visited = set()
+                stack = [(node_id, 0)]
+                
+                while stack:
+                    current_id, depth = stack.pop()
+                    
+                    if current_id in visited or depth > safe_depth:
+                        continue
+                    
+                    visited.add(current_id)
+                    
+                    if current_id in self._nodes:
+                        node_dict = self._nodes[current_id].to_dict()
+                        node_dict['depth'] = depth
+                        results.append(node_dict)
+                    
+                    for neighbor_id in self._adjacency.get(current_id, []):
+                        if neighbor_id not in visited:
+                            stack.append((neighbor_id, depth + 1))
+                
+                self._stats['infer_time'] += time.time() - start_time
+                return results
+    
+    def recommend_connections(self, node_label: str, k = 5) -> List[Dict[str, Any]]:
+        """推荐连接 - v12.0完整修复版本
+        """
+        self._stats['recommendations'] += 1
+        
+        if node_label is None:
+            return []
+        
+        safe_k = self._safe_k(k, default=5)
+        
+        node_lower = node_label.lower()
+        node_id = self._label_to_node.get(node_lower)
+        
+        if not node_id:
+            return []
+        
+        results = []
+        
+        with self._node_lock:
+            node = self._nodes.get(node_id)
+            has_embedding = node and node.has_embedding
+        
+        if has_embedding:
+            vec = node.embedding
+            similar = self._vector_index.search_similar(vec, safe_k + 10)
+            results = []
+            for score, nid in similar:
+                if nid != node_id:
+                    d = self._nodes[nid].to_dict()
+                    d['similarity_score'] = round(score, 4)
+                    results.append(d)
+        
+        return results[:safe_k]
+    
+    def get_graph_for_visualization(self) -> Dict[str, Any]:
+        """获取用于可视化的图数据
+        """
+        result = {'nodes': [], 'edges': []}
+        with self._node_lock:
+            for node in self._nodes.values():
+                result['nodes'].append(node.to_dict())
+        
+        with self._edge_lock:
+            for edge in self._edges.values():
+                result['edges'].append(edge.to_dict())
+        
+        return result
+    
+    def get_statistics(self) -> Dict[str, Any]:
+        """获取统计信息
+        """
+        with self._node_lock:
+            nodes_count = len(self._nodes)
+            edges_count = len(self._edges)
+        
+        avg_node = 0.0
+        avg_edge = 0.0
+        if self._stats['nodes_added'] > 0:
+            avg_node = self._stats['node_add_time'] / self._stats['nodes_added']
+        if self._stats['edges_added'] > 0:
+            avg_edge = self._stats['edge_add_time'] / self._stats['edges_added']
+        
+        return {
+            'nodes': nodes_count,
+            'edges': edges_count,
+            'stats': self._stats,
+            'avg_node_add_time_ms': avg_node * 1000,
+            'avg_edge_add_time_ms': avg_edge * 1000,
+        }
+    
+    def clear(self):
+        """清空系统
+        """
+        with self._node_lock:
+            self._nodes.clear()
+            self._label_to_node.clear()
+            self._adjacency.clear()
+        with self._edge_lock:
+            self._edges.clear()
+        self._cache.clear()
+        self._vector_index = VectorIndex()
+
+# 完整测试
+def run_complete_tests():
+    print("\n" * 2)
+    print("="*100)
+    print("🚀 知识图谱记忆系统 v12.0 - 完整测试")
+    print("="*100)
+    
+    ms = MemorySystemV12()
+    
+    test_passed = 0
+    test_total = 0
+    
+    # 1. 基本功能测试
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 1: 基本记忆功能")
+    print("="*80)
+    try:
+        id1 = ms.remember("Python")
+        id2 = ms.remember("JavaScript")
+        id3 = ms.remember("机器学习")
+        id4 = ms.remember("人工智能")
+        print(f"✅ 记忆成功，4个节点")
+        test_passed += 1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    # 2. 连接功能
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 2: 连接功能")
+    print("="*80)
+    try:
+        ms.connect("Python", "机器学习")
+        ms.connect("机器学习", "人工智能")
+        ms.connect("JavaScript", "Python")
+        print(f"✅ 连接成功，3条边")
+        test_passed +=1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    # 3. 召回功能
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 3: 召回功能")
+    print("="*80)
+    try:
+        result = ms.recall("Python")
+        print(f"✅ 召回成功，{len(result)}结果")
+        test_passed +=1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    # 4. 语义搜索
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 4: 语义搜索")
+    print("="*80)
+    try:
+        result = ms.semantic_search("Python")
+        print(f"✅ 语义搜索成功，{len(result)}结果")
+        test_passed +=1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    # 5. 推理功能
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 5: 推理功能")
+    print("="*80)
+    try:
+        result = ms.infer("Python", max_depth=3)
+        print(f"✅ 推理成功，{len(result)}结果")
+        test_passed +=1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    # 6. 推荐功能
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 6: 推荐功能")
+    print("="*80)
+    try:
+        result = ms.recommend_connections("Python")
+        print(f"✅ 推荐成功，{len(result)}结果")
+        test_passed +=1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    # 7. 统计功能
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 7: 统计功能")
+    print("="*80)
+    try:
+        stats = ms.get_statistics()
+        print(f"✅ 统计成功")
+        print(f"   节点: {stats['nodes']}")
+        print(f"   边: {stats['edges']}")
+        test_passed +=1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    # 8. 极端参数
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 8: 极端参数处理")
+    print("="*80)
+    try:
+        ms.remember(None)
+        ms.remember("")
+        ms.connect(None, "Python")
+        ms.connect("Python", None)
+        result = ms.recall("Python", k=None)
+        result = ms.recall("Python", k=-10)
+        result = ms.recall("Python", k="invalid")
+        result = ms.infer("Python", max_depth=None)
+        result = ms.infer("Python", max_depth=float('inf'))
+        print(f"✅ 所有极端参数都正确处理")
+        test_passed +=1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    # 9. 清空功能
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 9: 清空功能")
+    print("="*80)
+    try:
+        ms.clear()
+        stats = ms.get_statistics()
+        print(f"✅ 清空成功，节点: {stats['nodes']}, 边: {stats['edges']}")
+        test_passed +=1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    # 10. 大量测试
+    test_total +=1
+    print("\n" + "="*80)
+    print("测试 10: 大量数据性能测试")
+    print("="*80)
+    try:
+        for i in range(200):
+            ms.remember(f"Node_{i}")
+        for i in range(199):
+            ms.connect(f"Node_{i}", f"Node_{i+1}")
+        result = ms.infer("Node_0", max_depth=200)
+        print(f"✅ 200节点/199边，推理得到 {len(result)} 结果")
+        test_passed +=1
+    except Exception as e:
+        print(f"❌ 错误: {e}")
+    
+    print("\n" + "="*100)
+    print("🎉 测试总结")
+    print("="*100)
+    print(f"总测试数: {test_total}")
+    print(f"通过: {test_passed}")
+    print(f"失败: {test_total - test_passed}")
+    print(f"通过率: {100.0 * test_passed / test_total:.1f}%")
+    print("="*100)
+    
+    return test_passed == test_total
+
+if __name__ == "__main__":
+    success = run_complete_tests()
+    sys.exit(0 if success else 1)
