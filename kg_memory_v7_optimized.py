@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-知识图谱记忆系统 v7.8 - 超稳定深度优化版
+知识图谱记忆系统 v9.0 - 内部接口超安全深度优化版
 基于真实运行测试的深度优化：
 
 发现的问题和优化：
@@ -15,6 +15,8 @@
 9. ✅ 更好的错误处理和健壮性 (v7.7)
 10. ✅ NodeType完整性 - 添加EVENT类型 (v7.8)
 11. ✅ remember函数安全性 - node_type参数安全处理 (v7.8)
+12. ✅ recall/semantic_search/recommend/infer - 极端k/depth参数完全安全处理 (v9.0)
+13. ✅ 内部接口安全 - 任何参数都安全处理 (v9.0)
 """
 import sys
 import os
@@ -389,6 +391,44 @@ class MemorySystemV7Optimized:
             "infer_time": 0.0
         }
     
+    def _safe_k(self, k, default: int = 10) -> int:
+        """安全处理k参数 - v9.0超安全版本"""
+        if k is None:
+            return max(1, default)
+        if isinstance(k, bool):
+            return max(1, default)
+        try:
+            if isinstance(k, float):
+                if math.isnan(k) or math.isinf(k):
+                    return max(1, default)
+                num_k = int(k)
+            else:
+                num_k = int(k)
+            if math.isnan(num_k) or math.isinf(num_k):
+                return max(1, default)
+            return max(1, num_k)
+        except (ValueError, TypeError, OverflowError):
+            return max(1, default)
+    
+    def _safe_depth(self, max_depth, default: int = 3) -> int:
+        """安全处理max_depth参数 - v9.0超安全版本"""
+        if max_depth is None:
+            return max(1, default)
+        if isinstance(max_depth, bool):
+            return max(1, default)
+        try:
+            if isinstance(max_depth, float):
+                if math.isnan(max_depth) or math.isinf(max_depth):
+                    return max(1, default)
+                num_depth = int(max_depth)
+            else:
+                num_depth = int(max_depth)
+            if math.isnan(num_depth) or math.isinf(num_depth):
+                return max(1, default)
+            return max(1, num_depth)
+        except (ValueError, TypeError, OverflowError):
+            return max(1, default)
+    
     def remember(self, knowledge: str, properties: Dict = None, 
                node_type: str = NodeType.ENTITY, 
                compute_embedding: bool = True) -> str:
@@ -483,13 +523,12 @@ class MemorySystemV7Optimized:
         self._stats["edge_add_time"] += time.time() - start_time
         return edge.id
     
-    def recall(self, query: str, k: int = 20) -> List[Dict[str, Any]]:
-        """检索知识 - v7.7高稳定性版本"""
+    def recall(self, query: str, k = 20) -> List[Dict[str, Any]]:
+        """检索知识 - v9.0超安全版本"""
         start_time = time.time()
         self._stats["queries"] += 1
         
-        if k <= 0:
-            k = 1
+        k = self._safe_k(k, default=20)
         
         if query is None or query == "":
             with self._node_lock:
@@ -541,13 +580,12 @@ class MemorySystemV7Optimized:
         self._stats["query_time"] += time.time() - start_time
         return results
     
-    def semantic_search(self, query_label: str, k: int = 10) -> List[Dict[str, Any]]:
-        """语义搜索 - v7.7高稳定性版本"""
+    def semantic_search(self, query_label: str, k = 10) -> List[Dict[str, Any]]:
+        """语义搜索 - v9.0超安全版本"""
         start_time = time.time()
         self._stats["queries"] += 1
         
-        if k <= 0:
-            k = 1
+        k = self._safe_k(k, default=10)
         
         if query_label is None:
             query_label = ""
@@ -571,15 +609,14 @@ class MemorySystemV7Optimized:
         self._stats["semantic_search_time"] += time.time() - start_time
         return result
     
-    def recommend_connections(self, node_label: str, k: int = 5) -> List[Dict[str, Any]]:
-        """推荐连接 - v7.7高稳定性版本"""
+    def recommend_connections(self, node_label: str, k = 5) -> List[Dict[str, Any]]:
+        """推荐连接 - v9.0超安全版本"""
         self._stats["recommendations"] += 1
         
         if node_label is None:
             return []
         
-        if k <= 0:
-            k = 1
+        k = self._safe_k(k, default=5)
         
         with self._node_lock:
             node_label_lower = node_label.lower()
@@ -610,16 +647,15 @@ class MemorySystemV7Optimized:
             
             self._stats["embeddings_computed"] += len(nodes_list)
     
-    def infer(self, concept: str, max_depth: int = 3) -> List[Dict[str, Any]]:
-        """图推理 - v7.7高稳定性版本"""
+    def infer(self, concept: str, max_depth = 3) -> List[Dict[str, Any]]:
+        """图推理 - v9.0超安全版本"""
         start_time = time.time()
         self._stats["inferences"] += 1
         
         if concept is None:
             return []
         
-        if max_depth <= 0:
-            max_depth = 1
+        max_depth = self._safe_depth(max_depth, default=3)
         
         with self._node_lock:
             concept_lower = concept.lower()
