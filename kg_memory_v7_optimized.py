@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-知识图谱记忆系统 v12.0 - 完整修复的最终优化版本
+知识图谱记忆系统 v13.0 - 全面安全修复版本
 
 修复的问题：
 1. LRUCache 语法错误 - del self.cache.pop(oldest) 改为直接 pop
@@ -9,6 +9,7 @@
 4. knowledge_str 类型判断有语法问题
 5. NodeV7 的 to_dict 方法有问题
 6. 所有测试用例都通过
+7. ✅ v13.0 新增：所有输入类型（int, float, bool, list, dict, tuple, None）完全安全处理！
 """
 import sys
 import os
@@ -24,7 +25,7 @@ import threading
 import logging
 
 # 配置日志
-logger = logging.getLogger("KG_V12")
+logger = logging.getLogger("KG_V13")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
 handler.setLevel(logging.INFO)
@@ -199,7 +200,7 @@ class EdgeV7:
             'created_at': self.created_at,
         }
 
-# 知识图谱记忆系统 v12.0 - 最终优化版本
+# 知识图谱记忆系统 v13.0 - 全面安全版本
 class MemorySystemV7Optimized:
     """完整修复的知识图谱记忆系统
     """
@@ -220,7 +221,7 @@ class MemorySystemV7Optimized:
             'node_add_time': 0.0, 'edge_add_time': 0.0,
             'query_time': 0.0, 'semantic_search_time': 0.0, 'infer_time': 0.0,
         }
-        logger.info("[MemorySystemV7Optimized.__init__ - 初始化完成")
+        logger.info("[MemorySystemV7Optimized.__init__ - v13.0全面安全版初始化完成")
     
     def _safe_k(self, k, default: int = 10):
         if k is None:
@@ -250,21 +251,31 @@ class MemorySystemV7Optimized:
         except (ValueError, TypeError, OverflowError):
             return max(1, default)
     
-    def remember(self, knowledge: str, properties: Dict = None,
-               node_type: NodeType = NodeType.ENTITY,
+    def _safe_str(self, value):
+        """✅ v13.0新增：绝对安全的字符串转换方法"""
+        if value is None:
+            return ""
+        if isinstance(value, str):
+            return value
+        try:
+            return str(value)
+        except Exception:
+            return ""
+    
+    def remember(self, knowledge: Any, properties: Dict = None,
+               node_type: Any = NodeType.ENTITY,
                compute_embedding: bool = True) -> Optional[str]:
-        """记忆新知识 - v12.0完整修复版本
+        """记忆新知识 - v13.0全面安全版本
         """
         start_time = time.time()
         
         if knowledge is None:
             return None
         
-        knowledge_str = str(knowledge)
-        label_lower = knowledge_str.lower()
-        
-        if not label_lower:
+        knowledge_str = self._safe_str(knowledge)
+        if not knowledge_str:
             return None
+        label_lower = knowledge_str.lower()
         
         safe_node_type = NodeType.ENTITY
         if isinstance(node_type, NodeType):
@@ -302,10 +313,10 @@ class MemorySystemV7Optimized:
         self._stats['node_add_time'] += time.time() - start_time
         return node_id
     
-    def connect(self, source: str, target: str,
-               relation: str = EdgeType.RELATED_TO,
+    def connect(self, source: Any, target: Any,
+               relation: Any = EdgeType.RELATED_TO,
                weight: float = 1.0, properties: Dict = None) -> Optional[str]:
-        """建立关系连接 - v12.0完整修复版本
+        """建立关系连接 - v13.0全面安全版本
         """
         start_time = time.time()
         
@@ -319,13 +330,21 @@ class MemorySystemV7Optimized:
             safe_relation = relation.value
         elif isinstance(relation, str):
             safe_relation = relation
+        else:
+            safe_relation = str(relation) if relation else EdgeType.RELATED_TO
         
         safe_weight = 1.0
         if weight is not None and isinstance(weight, (int, float)):
             safe_weight = weight
         
-        source_lower = source.lower()
-        target_lower = target.lower()
+        # ✅ v13.0安全处理
+        source_str = self._safe_str(source)
+        target_str = self._safe_str(target)
+        if not source_str or not target_str:
+            return None
+        
+        source_lower = source_str.lower()
+        target_lower = target_str.lower()
         source_id = self._label_to_node.get(source_lower)
         target_id = self._label_to_node.get(target_lower)
         
@@ -350,15 +369,17 @@ class MemorySystemV7Optimized:
         self._stats['edge_add_time'] += time.time() - start_time
         return edge_id
     
-    def recall(self, query: str, k = 20) -> List[Dict[str, Any]]:
-        """检索知识 - v12.0完整修复版本
+    def recall(self, query: Any, k = 20) -> List[Dict[str, Any]]:
+        """检索知识 - v13.0全面安全版本
         """
         start_time = time.time()
         self._stats['queries'] += 1
         
         safe_k = self._safe_k(k, default=20)
         
-        if query is None or query == "":
+        # ✅ v13.0安全处理
+        query_str = self._safe_str(query)
+        if not query_str:
             with self._node_lock:
                 results = []
                 for i, node in enumerate(self._nodes.values()):
@@ -367,7 +388,7 @@ class MemorySystemV7Optimized:
                     results.append(node.to_dict())
                 return results
         
-        cache_key = f"recall:{query}:{safe_k}"
+        cache_key = f"recall:{query_str}:{safe_k}"
         cached = self._cache.get(cache_key)
         if cached is not None:
             self._stats['cache_hits'] += 1
@@ -378,7 +399,7 @@ class MemorySystemV7Optimized:
         with self._node_lock:
             results = []
             seen = set()
-            query_lower = query.lower()
+            query_lower = query_str.lower()
             
             if query_lower in self._label_to_node:
                 node_id = self._label_to_node[query_lower]
@@ -408,18 +429,20 @@ class MemorySystemV7Optimized:
         self._stats['query_time'] += time.time() - start_time
         return results
     
-    def semantic_search(self, query_label: str, k = 10) -> List[Dict[str, Any]]:
-        """语义搜索 - v12.0完整修复版本
+    def semantic_search(self, query_label: Any, k = 10) -> List[Dict[str, Any]]:
+        """语义搜索 - v13.0全面安全版本
         """
         start_time = time.time()
         self._stats['queries'] += 1
         
         safe_k = self._safe_k(k, default=10)
         
-        if query_label is None or query_label == "":
+        # ✅ v13.0安全处理
+        query_str = self._safe_str(query_label)
+        if not query_str:
             return self.recall(query_label, k=safe_k)
         
-        cache_key = f"semantic:{query_label}:{safe_k}"
+        cache_key = f"semantic:{query_str}:{safe_k}"
         cached = self._cache.get(cache_key)
         if cached is not None:
             self._stats['cache_hits'] += 1
@@ -429,7 +452,7 @@ class MemorySystemV7Optimized:
         
         vec = None
         with self._node_lock:
-            query_lower = query_label.lower()
+            query_lower = query_str.lower()
             query_id = self._label_to_node.get(query_lower)
             if query_id is not None and query_id in self._nodes:
                 node = self._nodes[query_id]
@@ -453,19 +476,21 @@ class MemorySystemV7Optimized:
         self._stats['semantic_search_time'] += time.time() - start_time
         return results
     
-    def infer(self, concept: str, max_depth = 3) -> List[Dict[str, Any]]:
-        """图推理 - v12.0完整修复版本
+    def infer(self, concept: Any, max_depth = 3) -> List[Dict[str, Any]]:
+        """图推理 - v13.0全面安全版本
         """
         start_time = time.time()
         self._stats['inferences'] += 1
         
         safe_depth = self._safe_depth(max_depth, default=3)
         
-        if concept is None:
+        # ✅ v13.0安全处理
+        concept_str = self._safe_str(concept)
+        if not concept_str:
             return []
         
         with self._node_lock:
-            concept_lower = concept.lower()
+            concept_lower = concept_str.lower()
             node_id = self._label_to_node.get(concept_lower)
             if not node_id:
                 return []
@@ -495,17 +520,19 @@ class MemorySystemV7Optimized:
                 self._stats['infer_time'] += time.time() - start_time
                 return results
     
-    def recommend_connections(self, node_label: str, k = 5) -> List[Dict[str, Any]]:
-        """推荐连接 - v12.0完整修复版本
+    def recommend_connections(self, node_label: Any, k = 5) -> List[Dict[str, Any]]:
+        """推荐连接 - v13.0全面安全版本
         """
         self._stats['recommendations'] += 1
         
-        if node_label is None:
+        # ✅ v13.0安全处理
+        node_label_str = self._safe_str(node_label)
+        if not node_label_str:
             return []
         
         safe_k = self._safe_k(k, default=5)
         
-        node_lower = node_label.lower()
+        node_lower = node_label_str.lower()
         node_id = self._label_to_node.get(node_lower)
         
         if not node_id:
