@@ -170,7 +170,7 @@ class LLMEngine:
         except ImportError:
             pass
 
-        self.api_key = api_key or os.getenv("SILICONFLOW_API_KEY", "sk-tstaxvmmhwohgledgrnaugkbewpqzjngthwmwrvllmodqdgq")
+        self.api_key = api_key or os.getenv("SILICONFLOW_API_KEY", "REDACTED_API_KEY")
         self.model = model or "Qwen/Qwen2.5-7B-Instruct"
         self.use_local = use_local
 
